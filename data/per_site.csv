@@ -1,0 +1,11 @@
+sector,website,page_domain,http_status,crawled_at,total_requests,third_party_requests,tracker_requests,distinct_tracker_owners,tracker_owners,offshore_requests,offshore_countries,insecure_requests,pii_findings
+government,https://www.abs.gov.au,www.abs.gov.au,200,2026-08-13 13:51:32.528986,63,2,1,1,Google,0,,0,0
+government,https://www.ato.gov.au,www.ato.gov.au,403,2026-08-13 13:51:10.147865,1,0,0,0,,0,,0,0
+government,https://www.australia.gov.au,www.australia.gov.au,200,2026-08-13 13:51:10.099792,63,62,61,2,"Australian Department of Human Services, Google",0,,0,4
+government,https://www.cyber.gov.au,www.cyber.gov.au,200,2026-08-13 13:51:34.552391,53,26,23,1,Google,0,,0,0
+government,https://www.fairwork.gov.au,www.fairwork.gov.au,200,2026-08-13 13:51:43.728774,20,5,5,1,Google,0,,0,5
+government,https://www.homeaffairs.gov.au,www.homeaffairs.gov.au,403,2026-08-13 13:51:22.106811,1,0,0,0,,0,,0,0
+government,https://www.nsw.gov.au,www.nsw.gov.au,200,2026-08-13 13:51:20.872734,166,22,17,4,"Cloudflare, New Relic, Adobe, Google",0,,0,5
+government,https://www.oaic.gov.au,www.oaic.gov.au,200,2026-08-13 13:51:33.820044,79,28,26,4,"Prospect One, Google, Cloudflare, ReadSpeaker Holding",0,,0,5
+government,https://www.service.nsw.gov.au,www.service.nsw.gov.au,200,2026-08-13 13:51:21.921133,117,3,3,2,"Google, ReadSpeaker Holding",0,,0,3
+government,https://www.servicesaustralia.gov.au,www.servicesaustralia.gov.au,200,2026-08-13 13:51:10.137156,51,4,4,3,"ReadSpeaker Holding, Google, Microsoft",0,,0,5

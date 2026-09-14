@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>DataExodus Observer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <div class="header">
+    <h1>🛡️ DataExodus Observer</h1>
+    <p id="current-domain">Loading...</p>
+  </div>
+
+  <!-- PII ALERT -->
+  <div id="pii-alert" class="pii-alert hidden">
+    🚨 PII HASH LEAK DETECTED 🚨
+    <div id="pii-detail" class="pii-detail"></div>
+  </div>
+
+  <!-- RISK SCORE GAUGE -->
+  <div class="risk-section">
+    <div class="risk-gauge">
+      <div class="risk-fill" id="risk-fill"></div>
+    </div>
+    <div class="risk-label">
+      Risk Score: <strong id="risk-score">0</strong>/100 —
+      <span id="risk-text">Safe</span>
+    </div>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="stats">
+    <div class="stat-box">
+      <div class="stat-value" id="total-reqs">0</div>
+      <div class="stat-label">Total</div>
+    </div>
+    <div class="stat-box warning">
+      <div class="stat-value" id="third-party-reqs">0</div>
+      <div class="stat-label">3rd-Party</div>
+    </div>
+    <div class="stat-box danger">
+      <div class="stat-value" id="tracker-reqs">0</div>
+      <div class="stat-label">Trackers</div>
+    </div>
+    <div class="stat-box info">
+      <div class="stat-value" id="country-count">0</div>
+      <div class="stat-label">Countries</div>
+    </div>
+  </div>
+
+  <!-- COUNTRIES -->
+  <div id="countries-section" class="hidden">
+    <h2>🌍 Data sent to:</h2>
+    <div id="countries-list" class="countries-list"></div>
+  </div>
+
+  <!-- DOMAIN LIST -->
+  <h2>Who is collecting your data?</h2>
+  <div id="domain-list"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

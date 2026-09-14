@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DataExodus Live Dashboard</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; }
+    header { padding: 20px 32px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
+    h1 { font-size: 22px; letter-spacing: -0.5px; }
+    .status { font-size: 13px; padding: 6px 14px; border-radius: 20px; background: #1e293b; }
+    .status.connected { background: #064e3b; color: #6ee7b7; }
+    .status.disconnected { background: #450a0a; color: #fca5a5; }
+    main { padding: 24px 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .card { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; }
+    .card h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; margin-bottom: 12px; }
+    .big-number { font-size: 36px; font-weight: 700; color: #f8fafc; }
+    .alert-box { position: fixed; top: 20px; right: 20px; max-width: 360px; z-index: 100; }
+    .alert-item { background: #450a0a; border: 1px solid #7f1d1d; color: #fca5a5; padding: 12px 16px; border-radius: 8px; margin-bottom: 8px; font-size: 13px; animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    #sankey { grid-column: 1 / -1; min-height: 500px; }
+    #map { grid-column: 1 / -1; min-height: 400px; }
+    .muted { color: #64748b; font-size: 13px; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>DataExodus — Live Privacy Monitor</h1>
+    <div id="conn-status" class="status disconnected">Disconnected</div>
+  </header>
+
+  <div class="alert-box" id="alerts"></div>
+
+  <main>
+    <div class="card">
+      <h2>Total Requests</h2>
+      <div class="big-number" id="stat-total">0</div>
+      <div class="muted">Since agent started</div>
+    </div>
+    <div class="card">
+      <h2>Trackers</h2>
+      <div class="big-number" id="stat-trackers">0</div>
+      <div class="muted">Third-party data collectors</div>
+    </div>
+    <div class="card">
+      <h2>Offshore</h2>
+      <div class="big-number" id="stat-offshore">0</div>
+      <div class="muted">Non-adequacy jurisdictions</div>
+    </div>
+    <div class="card">
+      <h2>PII Detected</h2>
+      <div class="big-number" id="stat-pii">0</div>
+      <div class="muted">Hashed identifier matches</div>
+    </div>
+    <div class="card" id="sankey">
+      <h2>Live Data Flow</h2>
+      <div id="sankey-chart"></div>
+    </div>
+    <div class="card" id="map">
+      <h2>Global Reach</h2>
+      <div id="map-chart"></div>
+    </div>
+  </main>
+
+  <script>
+    const WS_URL = "ws://localhost:8000/live";
+    let ws;
+    let reconnectTimer;
+    const stats = { total: 0, trackers: 0, offshore: 0, pii: 0 };
+    const flowData = {}; // site -> owner -> count
+    const countryData = {}; // country -> count
+
+    function connect() {
+      ws = new WebSocket(WS_URL);
+      ws.onopen = () => {
+        document.getElementById("conn-status").className = "status connected";
+        document.getElementById("conn-status").textContent = "Connected";
+        clearTimeout(reconnectTimer);
+      };
+      ws.onmessage = (e) => {
+        const { events, alerts } = JSON.parse(e.data);
+        events.forEach(ev => {
+          stats.total++;
+          if (ev.is_tracker) stats.trackers++;
+          if (!ev.country_adequacy) stats.offshore++;
+          if (ev.pii_detected) stats.pii++;
+
+          // Flow aggregation
+          const site = ev.initiator || "unknown";
+          const owner = ev.owner || ev.domain || "unknown";
+          if (!flowData[site]) flowData[site] = {};
+          flowData[site][owner] = (flowData[site][owner] || 0) + 1;
+
+          // Country aggregation
+          if (ev.country) {
+            countryData[ev.country] = (countryData[ev.country] || 0) + 1;
+          }
+        });
+        updateStats();
+        updateSankey();
+        updateMap();
+        if (alerts.length) showAlerts(alerts);
+      };
+      ws.onclose = () => {
+        document.getElementById("conn-status").className = "status disconnected";
+        document.getElementById("conn-status").textContent = "Disconnected";
+        reconnectTimer = setTimeout(connect, 3000);
+      };
+    }
+
+    function updateStats() {
+      document.getElementById("stat-total").textContent = stats.total.toLocaleString();
+      document.getElementById("stat-trackers").textContent = stats.trackers.toLocaleString();
+      document.getElementById("stat-offshore").textContent = stats.offshore.toLocaleString();
+      document.getElementById("stat-pii").textContent = stats.pii.toLocaleString();
+    }
+
+    function updateSankey() {
+      const sites = Object.keys(flowData);
+      const owners = [...new Set(Object.values(flowData).flatMap(o => Object.keys(o)))];
+      const labels = ["You", ...sites, ...owners];
+      const source = [], target = [], value = [];
+
+      sites.forEach((site, i) => {
+        const siteIdx = 1 + i;
+        source.push(0); target.push(siteIdx); value.push(1);
+        Object.entries(flowData[site]).forEach(([owner, count]) => {
+          const ownerIdx = 1 + sites.length + owners.indexOf(owner);
+          source.push(siteIdx); target.push(ownerIdx); value.push(count);
+        });
+      });
+
+      Plotly.react("sankey-chart", [{
+        type: "sankey",
+        orientation: "h",
+        node: { label: labels, pad: 10, thickness: 20 },
+        link: { source, target, value }
+      }], { paper_bgcolor: "transparent", plot_bgcolor: "transparent", font: { color: "#e2e8f0" } });
+    }
+
+    function updateMap() {
+      const countries = Object.keys(countryData);
+      const values = Object.values(countryData);
+      Plotly.react("map-chart", [{
+        type: "choropleth",
+        locations: countries,
+        z: values,
+        locationmode: "ISO-3",
+        colorscale: "Reds",
+        colorbar: { title: "Requests", tickfont: { color: "#e2e8f0" } }
+      }], {
+        paper_bgcolor: "transparent", plot_bgcolor: "transparent",
+        geo: { bgcolor: "transparent", lakecolor: "#0f172a", landcolor: "#1e293b", subunitcolor: "#334155" },
+        margin: { t: 0, b: 0 }
+      });
+    }
+
+    function showAlerts(alerts) {
+      const box = document.getElementById("alerts");
+      alerts.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = "alert-item";
+        div.textContent = msg;
+        box.appendChild(div);
+        setTimeout(() => div.remove(), 8000);
+      });
+    }
+
+    connect();
+  </script>
+</body>
+</html>
