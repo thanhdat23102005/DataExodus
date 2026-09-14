@@ -1,0 +1,147 @@
+{
+  "uid": "dataexodus-live",
+  "title": "DataExodus — live tracker & risk feed",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "time": { "from": "now-6h", "to": "now" },
+  "templating": { "list": [] },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Requests (24h)",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "datasource": { "type": "influxdb", "uid": "influxdb-dataexodus" },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"live_requests\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"requests\" and r._field == \"risk_score\")\n  |> count()\n  |> yield(name: \"total\")"
+        }
+      ],
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } }, "overrides": [] },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "textMode": "auto", "colorMode": "value", "graphMode": "none" }
+    },
+    {
+      "id": 2,
+      "title": "Tracker requests (24h)",
+      "type": "stat",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "datasource": { "type": "influxdb", "uid": "influxdb-dataexodus" },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"live_requests\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"requests\" and r._field == \"is_tracker\")\n  |> sum()\n  |> yield(name: \"trackers\")"
+        }
+      ],
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 1 }, { "color": "red", "value": 20 }] } }, "overrides": [] },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "textMode": "auto", "colorMode": "value", "graphMode": "none" }
+    },
+    {
+      "id": 3,
+      "title": "PII findings (24h)",
+      "type": "stat",
+      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
+      "datasource": { "type": "influxdb", "uid": "influxdb-dataexodus" },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"live_requests\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"requests\" and r._field == \"pii_findings\")\n  |> sum()\n  |> yield(name: \"pii\")"
+        }
+      ],
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } }, "overrides": [] },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "textMode": "auto", "colorMode": "value", "graphMode": "none" }
+    },
+    {
+      "id": 4,
+      "title": "Offshore requests (24h)",
+      "type": "stat",
+      "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
+      "datasource": { "type": "influxdb", "uid": "influxdb-dataexodus" },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"live_requests\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"requests\" and r._field == \"offshore\")\n  |> sum()\n  |> yield(name: \"offshore\")"
+        }
+      ],
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 1 }] } }, "overrides": [] },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "textMode": "auto", "colorMode": "value", "graphMode": "none" }
+    },
+    {
+      "id": 5,
+      "title": "Requests over time",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "datasource": { "type": "influxdb", "uid": "influxdb-dataexodus" },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"live_requests\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"requests\" and r._field == \"risk_score\")\n  |> aggregateWindow(every: v.windowPeriod, fn: count, createEmpty: false)\n  |> yield(name: \"requests\")"
+        }
+      ],
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "bars", "fillOpacity": 40 } }, "overrides": [] },
+      "options": {}
+    },
+    {
+      "id": 6,
+      "title": "Average risk score over time",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+      "datasource": { "type": "influxdb", "uid": "influxdb-dataexodus" },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"live_requests\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"requests\" and r._field == \"risk_score\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"avg_risk\")"
+        }
+      ],
+      "fieldConfig": { "defaults": { "min": 0, "max": 100, "custom": { "drawStyle": "line", "fillOpacity": 20 } }, "overrides": [] },
+      "options": {}
+    },
+    {
+      "id": 7,
+      "title": "Top tracker owners",
+      "type": "barchart",
+      "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
+      "datasource": { "type": "influxdb", "uid": "influxdb-dataexodus" },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"live_requests\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"requests\" and r._field == \"is_tracker\" and r._value == 1)\n  |> filter(fn: (r) => r.owner != \"none\")\n  |> group(columns: [\"owner\"])\n  |> count()\n  |> group()\n  |> sort(columns: [\"_value\"], desc: true)\n  |> limit(n: 10)\n  |> yield(name: \"top_owners\")"
+        }
+      ],
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "options": { "xField": "owner", "orientation": "horizontal" }
+    },
+    {
+      "id": 8,
+      "title": "Risk level distribution",
+      "type": "piechart",
+      "gridPos": { "x": 12, "y": 12, "w": 12, "h": 8 },
+      "datasource": { "type": "influxdb", "uid": "influxdb-dataexodus" },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"live_requests\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"requests\" and r._field == \"risk_score\")\n  |> group(columns: [\"risk_level\"])\n  |> count()\n  |> yield(name: \"risk_distribution\")"
+        }
+      ],
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "options": { "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] } }
+    },
+    {
+      "id": 9,
+      "title": "Live request feed",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 20, "w": 24, "h": 10 },
+      "datasource": { "type": "influxdb", "uid": "influxdb-dataexodus" },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"live_requests\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"requests\")\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> keep(columns: [\"_time\", \"page_domain\", \"domain\", \"owner\", \"category\", \"risk_level\", \"risk_score\", \"is_tracker\", \"offshore\", \"fingerprinting\", \"pii_findings\"])\n  |> group()\n  |> sort(columns: [\"_time\"], desc: true)\n  |> limit(n: 50)\n  |> yield(name: \"live_feed\")"
+        }
+      ],
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "options": {}
+    }
+  ]
+}

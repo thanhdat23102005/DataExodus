@@ -1,0 +1,71 @@
+# DataExodus — Git Ignore
+
+# Sensitive data
+/data/identities.local.yaml
+/data/*.duckdb
+/data/*.duckdb.*
+/data/*.db
+/data/*.db-journal
+/data/live/
+/data/*.joblib
+
+# Monitoring stack secrets — Grafana admin password + InfluxDB admin token.
+# These MUST stay out of git; the setup script regenerates them.
+/monitoring/*/credentials.env
+
+# Monitoring stack runtime data & downloaded binaries (~650MB, re-downloaded
+# by monitoring/setup_monitoring.sh). Provisioning config is kept in git.
+/monitoring/influxdb/influxd
+/monitoring/influxdb/data/
+/monitoring/influxdb/LICENSE
+/monitoring/influxdb/README.md
+/monitoring/grafana/bin/
+/monitoring/grafana/data/
+/monitoring/grafana/data-storage/
+/monitoring/grafana/docs/
+/monitoring/grafana/packaging/
+/monitoring/grafana/plugins-bundled/
+/monitoring/grafana/public/
+/monitoring/grafana/tools/
+/monitoring/grafana/conf/defaults.ini
+/monitoring/grafana/conf/sample.ini
+/monitoring/grafana/Dockerfile
+/monitoring/grafana/LICENSE
+/monitoring/grafana/NOTICE.md
+/monitoring/grafana/README.md
+/monitoring/grafana/VERSION
+
+# Raw outputs (large)
+/data/raw/*.json
+/data/raw_old_format/
+
+# Blocklists (downloadable)
+/data/blocklists/
+
+# Figures
+/figures/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+*.spec
+
+# Virtual env
+venv/
+.venv/
+.env
+.env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

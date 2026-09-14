@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataExodus — Live Privacy Monitor</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page:           #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --gridline:       #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    /* sequential blue — one hue, ranked bars are a single series */
+    --bar:            #3987e5;
+    --bar-track:      #184f95;
+    /* status palette (fixed, never themed) */
+    --good:           #0ca30c;
+    --warning:        #fab219;
+    --critical:       #d03b3b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 28px 32px 48px;
+    background: var(--page);
+    color: var(--text-primary);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  header { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+  h1 { font-size: 22px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  .sub { color: var(--text-secondary); font-size: 14px; }
+  .status-pill {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 7px;
+    font-size: 13px; color: var(--text-secondary);
+    border: 1px solid var(--border); border-radius: 999px; padding: 5px 13px;
+    background: var(--surface-1);
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .dot.on { background: var(--good); }
+  .dot.off { background: var(--critical); }
+
+  .grid { display: grid; gap: 16px; margin-top: 22px; }
+  .kpis { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+  .cols { grid-template-columns: 1fr 1fr; align-items: start; }
+  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .card h2 {
+    font-size: 13px; font-weight: 600; margin: 0 0 16px;
+    color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .tile-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+  .tile-value { font-size: 34px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
+  .tile-note { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+  /* ranked bars — single hue, 4px rounded data-end, capped thickness */
+  .bar-row { display: grid; grid-template-columns: 1fr 46px; gap: 12px; align-items: center; margin-bottom: 12px; }
+  .bar-name { font-size: 13px; color: var(--text-secondary); margin-bottom: 5px; }
+  .bar-track { height: 10px; background: var(--gridline); border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--bar); border-radius: 0 4px 4px 0; min-width: 2px; transition: width .4s ease; }
+  .bar-val { font-size: 13px; color: var(--text-secondary); text-align: right; font-variant-numeric: tabular-nums; }
+
+  .risk-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 14px; }
+  .risk-chip { display: inline-flex; align-items: center; gap: 7px; min-width: 104px; color: var(--text-secondary); }
+  .risk-bar { flex: 1; height: 10px; background: var(--gridline); border-radius: 5px; overflow: hidden; }
+  .risk-fill { height: 100%; border-radius: 0 4px 4px 0; min-width: 2px; transition: width .4s ease; }
+  .risk-count { width: 46px; text-align: right; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left; font-weight: 600; color: var(--text-muted); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 0 10px 9px 0; border-bottom: 1px solid var(--baseline);
+  }
+  td { padding: 9px 10px 9px 0; border-bottom: 1px solid var(--gridline); color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+  td.domain { color: var(--text-primary); max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tag { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+  .scroll { overflow-x: auto; }
+  .empty { color: var(--text-muted); font-size: 14px; padding: 22px 0; text-align: center; }
+  footer { margin-top: 26px; color: var(--text-muted); font-size: 12px; }
+  code { background: var(--surface-1); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 12px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>DataExodus</h1>
+    <span class="sub">Live privacy monitor</span>
+    <span class="status-pill"><span class="dot off" id="conn-dot"></span><span id="conn-text">connecting…</span></span>
+  </header>
+
+  <div class="grid kpis">
+    <div class="card">
+      <div class="tile-label">Requests seen</div>
+      <div class="tile-value" id="k-total">—</div>
+      <div class="tile-note">since the agent started</div>
+    </div>
+    <div class="card">
+      <div class="tile-label">Tracker requests</div>
+      <div class="tile-value" id="k-trackers">—</div>
+      <div class="tile-note" id="k-trackers-pct">—</div>
+    </div>
+    <div class="card">
+      <div class="tile-label">Offshore</div>
+      <div class="tile-value" id="k-offshore">—</div>
+      <div class="tile-note">outside the adequacy list</div>
+    </div>
+    <div class="card">
+      <div class="tile-label">Personal data</div>
+      <div class="tile-value" id="k-pii">—</div>
+      <div class="tile-note">raw or hashed identifiers</div>
+    </div>
+  </div>
+
+  <div class="grid cols">
+    <div class="card">
+      <h2>Who receives your data</h2>
+      <div id="owners"><div class="empty">No third parties seen yet.</div></div>
+    </div>
+    <div class="card">
+      <h2>Risk level</h2>
+      <div id="risk"><div class="empty">No requests scored yet.</div></div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Live request feed</h2>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>Time</th><th>Destination</th><th>Owner</th><th>Category</th><th>Country</th><th>Flags</th><th>Risk</th></tr>
+          </thead>
+          <tbody id="feed"><tr><td colspan="7" class="empty">Waiting for traffic — browse a site with the extension enabled.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Refreshes every 3s · raw JSON at <code>/summary</code>, <code>/recent</code>, <code>/site/{domain}</code>
+    · time-series dashboard in Grafana at <code>127.0.0.1:3000</code>
+  </footer>
+
+<script>
+const RISK_COLORS = { green: "var(--good)", yellow: "var(--warning)", red: "var(--critical)" };
+const RISK_LABEL  = { green: "Low", yellow: "Medium", red: "High" };
+
+function fmt(n) {
+  if (n === null || n === undefined) return "—";
+  return n >= 10000 ? (n / 1000).toFixed(1).replace(/\.0$/, "") + "K" : n.toLocaleString();
+}
+
+function setConn(ok) {
+  document.getElementById("conn-dot").className = "dot " + (ok ? "on" : "off");
+  document.getElementById("conn-text").textContent = ok ? "agent connected" : "agent disconnected";
+}
+
+function renderOwners(owners) {
+  const el = document.getElementById("owners");
+  if (!owners || !owners.length) {
+    el.innerHTML = '<div class="empty">No third parties seen yet.</div>';
+    return;
+  }
+  const max = Math.max(...owners.map(o => o.count));
+  el.innerHTML = owners.map(o => `
+    <div>
+      <div class="bar-name">${escapeHtml(o.owner)}</div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill" style="width:${(o.count / max * 100).toFixed(1)}%"></div></div>
+        <div class="bar-val">${fmt(o.count)}</div>
+      </div>
+    </div>`).join("");
+}
+
+function renderRisk(rows) {
+  const el = document.getElementById("risk");
+  const counts = { green: 0, yellow: 0, red: 0 };
+  rows.forEach(r => { counts[r.risk_level] = (counts[r.risk_level] || 0) + 1; });
+  const total = counts.green + counts.yellow + counts.red;
+  if (!total) {
+    el.innerHTML = '<div class="empty">No requests scored yet.</div>';
+    return;
+  }
+  el.innerHTML = ["red", "yellow", "green"].map(level => `
+    <div class="risk-row">
+      <span class="risk-chip">
+        <span class="dot" style="background:${RISK_COLORS[level]}"></span>${RISK_LABEL[level]} risk
+      </span>
+      <span class="risk-bar">
+        <span class="risk-fill" style="width:${(counts[level] / total * 100).toFixed(1)}%;background:${RISK_COLORS[level]}"></span>
+      </span>
+      <span class="risk-count">${fmt(counts[level])}</span>
+    </div>`).join("") +
+    `<div class="tile-note" style="margin-top:14px">Scored from the most recent ${total} request(s).</div>`;
+}
+
+function renderFeed(rows) {
+  const tb = document.getElementById("feed");
+  if (!rows.length) {
+    tb.innerHTML = '<tr><td colspan="7" class="empty">Waiting for traffic — browse a site with the extension enabled.</td></tr>';
+    return;
+  }
+  tb.innerHTML = rows.map(r => {
+    const t = r.ts ? new Date(r.ts).toLocaleTimeString() : "—";
+    const flags = [];
+    if (r.is_tracker) flags.push("tracker");
+    if (r.pii_detected) flags.push("PII");
+    if (r.fingerprinting) flags.push("fingerprint");
+    return `<tr>
+      <td>${t}</td>
+      <td class="domain">${escapeHtml(r.domain || "—")}</td>
+      <td>${escapeHtml(r.owner || "—")}</td>
+      <td>${escapeHtml(r.category || "—")}</td>
+      <td>${escapeHtml(r.country || "—")}</td>
+      <td>${flags.length ? escapeHtml(flags.join(", ")) : "—"}</td>
+      <td><span class="tag"><span class="dot" style="background:${RISK_COLORS[r.risk_level]}"></span>${r.risk_score ?? 0}</span></td>
+    </tr>`;
+  }).join("");
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+async function refresh() {
+  try {
+    const [summary, recent] = await Promise.all([
+      fetch("/summary").then(r => r.json()),
+      fetch("/recent?limit=40").then(r => r.json()),
+    ]);
+    setConn(true);
+    document.getElementById("k-total").textContent = fmt(summary.total_requests);
+    document.getElementById("k-trackers").textContent = fmt(summary.tracker_requests);
+    document.getElementById("k-offshore").textContent = fmt(summary.offshore_requests);
+    document.getElementById("k-pii").textContent = fmt(summary.pii_requests);
+    document.getElementById("k-trackers-pct").textContent = summary.total_requests
+      ? (summary.tracker_requests / summary.total_requests * 100).toFixed(1) + "% of all requests"
+      : "—";
+    renderOwners(summary.top_owners);
+    renderRisk(recent);
+    renderFeed(recent);
+  } catch (e) {
+    setConn(false);
+  }
+}
+
+refresh();
+setInterval(refresh, 3000);
+</script>
+</body>
+</html>

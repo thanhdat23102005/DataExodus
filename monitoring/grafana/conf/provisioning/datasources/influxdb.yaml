@@ -1,0 +1,17 @@
+apiVersion: 1
+
+datasources:
+  - name: InfluxDB-DataExodus
+    uid: influxdb-dataexodus
+    type: influxdb
+    access: proxy
+    url: http://127.0.0.1:8086
+    jsonData:
+      version: Flux
+      organization: dataexodus
+      defaultBucket: live_requests
+      httpMode: POST
+    secureJsonData:
+      token: ${INFLUX_TOKEN}
+    isDefault: true
+    editable: true
