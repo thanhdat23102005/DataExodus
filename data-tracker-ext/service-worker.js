@@ -1,47 +1,53 @@
-// service-worker.js - DataExodus Core Engine v3.1
+// service-worker.js - DataExodus Core Engine v3.3
 // Intercepts all network traffic, classifies requests, detects PII leaks,
 // calculates risk scores, and blocks malware domains.
 import { lookupTracker } from './trackers.js';
 
 // ============================================================
-// 1. PII HASH DETECTION
-//    Pre-computed hashes for test@example.com
-//    Swap these for hashes of your real identifier before
-//    treating results as evidence — this is still a demo value.
+// 1. PII DETECTION (loaded from the identity index the popup builds)
+//
+//    FIX (v3.3): v3.2 loaded hashes via a fire-and-forget
+//    chrome.storage.local.get callback at top level. MV3 evicts this
+//    service worker after ~30s idle, so on every wake-up there was a
+//    window where request listeners ran with an empty hash list and
+//    scanned nothing — and a missed scan looks exactly like "no leak
+//    found". Now the load is a promise the listener awaits.
 // ============================================================
-const TEST_EMAIL = "test@example.com";
-const TARGET_HASHES = [
-  "55502f40dc8b7c769880b10874abc9d0",                                          // MD5
-  "567159d622ffbb50b11b0efd307be358624a26ee",                                  // SHA1
-  "973dfe463ec85785f5f95af5ba3906eedb2d931c24e69824a89ea65dba4e813b",          // SHA256
-  TEST_EMAIL,                                                                    // Plaintext
-];
+let piiIndex = null;        // { plaintexts: string[], hashes: { hex: algoName } }
+let piiHashEntries = [];    // cached Object.entries(piiIndex.hashes)
+
+const piiReady = chrome.storage.local.get("piiIndex").then((res) => {
+  setPiiIndex(res.piiIndex || null);
+});
+
+function setPiiIndex(index) {
+  piiIndex = index;
+  piiHashEntries = index && index.hashes ? Object.entries(index.hashes) : [];
+}
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== "local") return;
+  if (changes.piiIndex) setPiiIndex(changes.piiIndex.newValue || null);
+  if (changes.gatewayConfig) setGatewayConfig(changes.gatewayConfig.newValue);
+});
 
 function containsPii(str) {
-  if (!str) return null;
+  if (!str || !piiIndex) return null;
   const lower = str.toLowerCase();
-  for (const hash of TARGET_HASHES) {
-    if (lower.includes(hash)) {
-      if (hash === TEST_EMAIL) return "plaintext";
-      if (hash.length === 32) return "MD5";
-      if (hash.length === 40) return "SHA1";
-      return "SHA256";
-    }
+  for (const plain of piiIndex.plaintexts) {
+    if (lower.includes(plain)) return "plaintext";
+  }
+  for (const [hash, algo] of piiHashEntries) {
+    if (lower.includes(hash)) return algo;
   }
   return null;
 }
 
 // ============================================================
 // 2. MALWARE BLOCKER (Declarative Net Request)
-//    Blocks known malicious domains and redirects to warning page.
-//
-//    FIX (v3.1): resourceTypes narrowed to main_frame/sub_frame only.
-//    Redirecting a `script` or `xmlhttprequest` load to an HTML page
-//    does not show the user anything — Chrome just blocks that one
-//    sub-resource silently (the target isn't in web_accessible_resources,
-//    and even if it were, serving HTML where JS/JSON was expected just
-//    breaks the page instead of warning the user). Only full-page
-//    navigations can meaningfully show warning.html.
+//    resourceTypes stays main_frame/sub_frame: redirecting a script or
+//    xhr load to an HTML page shows the user nothing, it just breaks
+//    that sub-resource silently.
 // ============================================================
 const MALWARE_DOMAINS = [
   "malware-demo.com",
@@ -79,15 +85,9 @@ function getDomain(urlStr) {
   }
 }
 
-/**
- * Proper third-party detection using eTLD+1 comparison.
- * Example: "cdn.facebook.com" vs "facebook.com" -> same party
- *          "facebook.com" vs "abc.net.au" -> third party
- */
 function getBaseDomain(hostname) {
   if (!hostname) return "";
   const parts = hostname.split(".");
-  // Handle .com.au, .gov.au, .co.uk style TLDs
   const multiPartTlds = ["com.au", "gov.au", "net.au", "org.au", "co.uk", "co.nz"];
   const lastTwo = parts.slice(-2).join(".");
   if (multiPartTlds.includes(lastTwo) && parts.length >= 3) {
@@ -106,17 +106,9 @@ function isThirdParty(sourceDomain, destDomain) {
 
 // ============================================================
 // 4. RISK SCORING ALGORITHM
-//    Calculates a 0-100 weighted risk score for each tab.
-//    Higher score = more privacy risk.
-//
-//    Weights (self-designed heuristic, not from a published model —
-//    say so explicitly if this number appears in the report):
-//    - Each unique tracker company:       +8 points
-//    - Each unique country (non-AU):      +5 points
-//    - Third-party request ratio > 50%:   +10 points
-//    - PII leak detected:                 +30 points
-//    - Advertising category tracker:      +3 extra per unique
-//    Score is capped at 100.
+//    Self-designed heuristic, not from a published model - say so
+//    explicitly wherever this number appears in the report.
+//    Only covert (third-party) PII adds the 30-point penalty.
 // ============================================================
 function calculateRiskScore(tabData) {
   let score = 0;
@@ -131,58 +123,35 @@ function calculateRiskScore(tabData) {
     if (info.isThirdParty) thirdPartyReqs += info.count;
     if (info.tracker) {
       companies.add(info.tracker.company);
-      if (info.tracker.country !== "AU") {
-        countries.add(info.tracker.country);
-      }
-      if (info.tracker.category === "Advertising") {
-        hasAdvertising++;
-      }
+      if (info.tracker.country !== "AU") countries.add(info.tracker.country);
+      if (info.tracker.category === "Advertising") hasAdvertising++;
     }
   }
 
-  score += companies.size * 8;       // Each unique tracker company
-  score += countries.size * 5;        // Each unique foreign country
-  score += hasAdvertising * 3;        // Advertising trackers are worse
+  score += companies.size * 8;
+  score += countries.size * 5;
+  score += hasAdvertising * 3;
+  if (totalReqs > 0 && (thirdPartyReqs / totalReqs) > 0.5) score += 10;
+  if (tabData.piiLeaked) score += 30;
 
-  if (totalReqs > 0 && (thirdPartyReqs / totalReqs) > 0.5) {
-    score += 10;                      // High third-party ratio
-  }
-  if (tabData.piiLeaked) {
-    score += 30;                      // PII leak is very dangerous
-  }
-
-  return Math.min(score, 100);        // Cap at 100
+  return Math.min(score, 100);
 }
 
 // ============================================================
-// 5. IN-MEMORY STATE (FIX for v3.0 race condition)
+// 5. IN-MEMORY STATE
+//    One canonical mutable object per tab. Requests mutate it directly
+//    and synchronously, so there is no read-a-copy/write-a-copy window
+//    for concurrent requests to lose updates in. chrome.storage.local
+//    is only a periodic snapshot, written so the popup can read it.
 //
-//    v3.0 used chrome.storage.local as the read-modify-write target
-//    for every single request: get() -> mutate -> set(). Because
-//    storage.local access is a real async round-trip, a burst of
-//    concurrent requests (normal on any modern page) could interleave:
-//    two requests both read the same "old" snapshot, both mutate their
-//    own copy, and whichever set() finishes last silently overwrites
-//    the other's update. Counts and even PII-leak flags could be lost
-//    with no error and no way to detect it after the fact.
-//
-//    Fix: keep one canonical mutable object per tab in memory
-//    (tabDataCache). Every request mutates that same object directly,
-//    in place, synchronously — there is no read-a-copy/write-a-copy
-//    step for the race to land in. chrome.storage.local is now only
-//    a periodic, debounced *snapshot* of that in-memory state, written
-//    just so the popup (a separate context) can read it.
-//
-//    Trade-off: MV3 service workers can be evicted from memory after
-//    ~30s idle. If that happens, up to FLUSH_INTERVAL_MS of unflushed
-//    activity for a tab can be lost. That window is bounded and small
-//    (default 400ms) — acceptable for this project's purposes, but
-//    worth stating explicitly rather than pretending it's perfect.
+//    Trade-off: if MV3 evicts this worker between flushes, up to
+//    FLUSH_INTERVAL_MS of activity for a tab is lost. Bounded and small.
 // ============================================================
-const tabDataCache = new Map();   // tabId -> tabData (canonical, in-memory)
-const hydrating = new Map();      // tabId -> in-flight storage read promise
-const dirtyTabs = new Set();      // tabIds with unflushed changes
+const tabDataCache = new Map();
+const hydrating = new Map();
+const dirtyTabs = new Set();
 const FLUSH_INTERVAL_MS = 400;
+const MAX_PII_DETAILS = 50;
 
 function defaultTabData(url) {
   const domain = getDomain(url);
@@ -197,14 +166,8 @@ function defaultTabData(url) {
   };
 }
 
-// Returns the canonical in-memory tabData for a tab, hydrating it from
-// chrome.storage.local at most once (e.g. after a service worker restart).
-// Concurrent callers for the same brand-new tab are guaranteed to share
-// a single hydration read via the `hydrating` map, never duplicate it.
 async function ensureTabData(tabId, fallbackUrl) {
-  if (tabDataCache.has(tabId)) {
-    return tabDataCache.get(tabId);
-  }
+  if (tabDataCache.has(tabId)) return tabDataCache.get(tabId);
 
   let hydration = hydrating.get(tabId);
   if (!hydration) {
@@ -227,29 +190,151 @@ function markDirty(tabId) {
   dirtyTabs.add(tabId);
 }
 
-async function flushDirtyTabs() {
-  if (dirtyTabs.size === 0) return;
-  const toWrite = {};
-  for (const tabId of dirtyTabs) {
-    const data = tabDataCache.get(tabId);
-    if (data) toWrite[`tabData_${tabId}`] = data;
+// ============================================================
+// 6. GATEWAY TELEMETRY (Raspberry Pi backend)
+//
+//    FIX (v3.3), three problems with v3.2:
+//    a) the gateway address was hardcoded, so the extension only worked
+//       on one LAN - it broke the moment the laptop moved networks;
+//    b) every flush re-sent each tab's ENTIRE accumulated request map,
+//       so a long session on a busy page shipped the same growing blob
+//       ~2.5x per second. Only changed destinations are sent now;
+//    c) failures were swallowed by an empty catch, so a gateway that was
+//       off (or an address that was wrong) looked identical to one that
+//       was working. Status is recorded and shown in the popup.
+//
+//    Full page URLs are deliberately NOT sent - only hostnames. A URL
+//    carries search terms, session ids and query parameters, and this is
+//    a privacy tool.
+// ============================================================
+const DEFAULT_GATEWAY_URL = "http://192.168.0.83:5000/api/telemetry";
+const GATEWAY_TIMEOUT_MS = 4000;
+
+let gatewayConfig = { url: DEFAULT_GATEWAY_URL, enabled: true };
+let gatewayFlushInFlight = false;
+const pendingTelemetry = new Map();  // tabId -> { domains: Set, sentPii: number }
+
+const gatewayReady = chrome.storage.local.get("gatewayConfig").then((res) => {
+  setGatewayConfig(res.gatewayConfig);
+});
+
+function setGatewayConfig(cfg) {
+  gatewayConfig = {
+    url: (cfg && cfg.url) || DEFAULT_GATEWAY_URL,
+    enabled: cfg ? cfg.enabled !== false : true,
+  };
+}
+
+function markTelemetryChange(tabId, destDomain) {
+  let pending = pendingTelemetry.get(tabId);
+  if (!pending) {
+    pending = { domains: new Set(), sentPii: 0 };
+    pendingTelemetry.set(tabId, pending);
   }
-  dirtyTabs.clear();
-  if (Object.keys(toWrite).length > 0) {
-    await chrome.storage.local.set(toWrite);
+  pending.domains.add(destDomain);
+}
+
+function buildTelemetryPayload() {
+  const tabs = {};
+  let changes = 0;
+
+  for (const [tabId, pending] of pendingTelemetry) {
+    const data = tabDataCache.get(tabId);
+    if (!data) continue;
+
+    const requests = {};
+    for (const domain of pending.domains) {
+      if (data.requests[domain]) requests[domain] = data.requests[domain];
+    }
+    const newPii = data.piiDetails.slice(pending.sentPii);
+    if (Object.keys(requests).length === 0 && newPii.length === 0) continue;
+
+    tabs[`tabData_${tabId}`] = {
+      domain: data.domain,
+      baseDomain: data.baseDomain,
+      riskScore: data.riskScore,
+      piiLeaked: data.piiLeaked,
+      newPiiDetails: newPii,
+      requests,
+    };
+    changes++;
+  }
+
+  return changes > 0 ? tabs : null;
+}
+
+async function recordGatewayStatus(ok, detail) {
+  await chrome.storage.local.set({
+    gatewayStatus: { ok, detail: detail || null, at: Date.now() },
+  });
+}
+
+async function sendTelemetry() {
+  if (!gatewayConfig.enabled || gatewayFlushInFlight) return;
+
+  const snapshot = new Map();
+  for (const [tabId, pending] of pendingTelemetry) {
+    snapshot.set(tabId, { domains: new Set(pending.domains), sentPii: pending.sentPii });
+  }
+
+  const telemetry = buildTelemetryPayload();
+  if (!telemetry) return;
+
+  gatewayFlushInFlight = true;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), GATEWAY_TIMEOUT_MS);
+
+  try {
+    const res = await fetch(gatewayConfig.url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ telemetry, timestamp: Date.now(), delta: true }),
+      signal: controller.signal,
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    // Only clear what was actually delivered. A failed send leaves the
+    // pending set intact so the next flush retries it instead of
+    // dropping the requests on the floor.
+    for (const [tabId, sent] of snapshot) {
+      const pending = pendingTelemetry.get(tabId);
+      if (!pending) continue;
+      for (const domain of sent.domains) pending.domains.delete(domain);
+      const data = tabDataCache.get(tabId);
+      if (data) pending.sentPii = data.piiDetails.length;
+    }
+    await recordGatewayStatus(true);
+  } catch (err) {
+    const detail = err.name === "AbortError" ? "timeout" : String(err.message || err);
+    await recordGatewayStatus(false, detail);
+  } finally {
+    clearTimeout(timer);
+    gatewayFlushInFlight = false;
   }
 }
 
+async function flushDirtyTabs() {
+  if (dirtyTabs.size > 0) {
+    const toWrite = {};
+    for (const tabId of dirtyTabs) {
+      const data = tabDataCache.get(tabId);
+      if (data) toWrite[`tabData_${tabId}`] = data;
+    }
+    dirtyTabs.clear();
+    if (Object.keys(toWrite).length > 0) {
+      await chrome.storage.local.set(toWrite);
+    }
+  }
+  await sendTelemetry();
+}
+
 setInterval(flushDirtyTabs, FLUSH_INTERVAL_MS);
-// Best-effort final flush if Chrome gives the service worker a chance
-// to run code before suspending it. Not guaranteed to fire.
 chrome.runtime.onSuspend?.addListener(() => {
   flushDirtyTabs();
 });
 
 // ============================================================
-// 6. MAIN REQUEST LISTENER
-//    Intercepts every outgoing HTTP request and records it.
+// 7. MAIN REQUEST LISTENER
 // ============================================================
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
@@ -268,7 +353,8 @@ chrome.webRequest.onBeforeRequest.addListener(
         const thirdParty = isThirdParty(sourceDomain, destDomain);
         const trackerInfo = lookupTracker(destDomain);
 
-        // --- PII Leak Detection ---
+        await piiReady;
+
         let piiType = containsPii(details.url);
         if (!piiType && details.requestBody) {
           if (details.requestBody.formData) {
@@ -284,39 +370,54 @@ chrome.webRequest.onBeforeRequest.addListener(
           }
         }
 
-        // --- Get the canonical in-memory record (only async on first use) ---
         const tabData = await ensureTabData(details.tabId, tab.url);
 
-        // --- Everything below mutates the SAME in-memory object directly.
-        //     No await between here and the end of the block, so no other
-        //     request for this tab can interleave mid-update. ---
-        if (piiType) {
+        // Everything below mutates the same in-memory object directly.
+        // No await between here and the end of the block, so no other
+        // request for this tab can interleave mid-update.
+
+        // Scope matters: typing your email into a site's own search box
+        // sends it first-party, which you chose to do. That same value
+        // reaching a third party is the covert case the study is about.
+        // Both are recorded; only the covert one raises the alarm.
+        const piiScope = piiType ? (thirdParty ? "covert" : "intentional") : null;
+
+        if (piiScope === "covert") {
           tabData.piiLeaked = true;
+        }
+        if (piiScope) {
           tabData.piiDetails.push({
             type: piiType,
+            scope: piiScope,
             destination: destDomain,
             company: trackerInfo ? trackerInfo.company : "Unknown",
           });
+          if (tabData.piiDetails.length > MAX_PII_DETAILS) {
+            tabData.piiDetails.splice(0, tabData.piiDetails.length - MAX_PII_DETAILS);
+          }
         }
 
         if (!tabData.requests[destDomain]) {
           tabData.requests[destDomain] = {
             count: 0,
             isThirdParty: thirdParty,
-            tracker: trackerInfo,   // null if not a tracker, { company, country, category } if it is
+            tracker: trackerInfo,
             piiLeak: false,
             piiType: null,
+            piiScope: null,
           };
         }
         tabData.requests[destDomain].count++;
-        if (piiType) {
-          tabData.requests[destDomain].piiLeak = true;
+        if (piiScope) {
+          tabData.requests[destDomain].piiLeak = piiScope === "covert";
           tabData.requests[destDomain].piiType = piiType;
+          tabData.requests[destDomain].piiScope = piiScope;
         }
 
         tabData.riskScore = calculateRiskScore(tabData);
 
         markDirty(details.tabId);
+        markTelemetryChange(details.tabId, destDomain);
       } catch (err) {
         // Tab might be closed or chrome:// URL
       }
@@ -327,12 +428,13 @@ chrome.webRequest.onBeforeRequest.addListener(
 );
 
 // ============================================================
-// 7. TAB LIFECYCLE MANAGEMENT
+// 8. TAB LIFECYCLE MANAGEMENT
 // ============================================================
 chrome.tabs.onRemoved.addListener(async (tabId) => {
   tabDataCache.delete(tabId);
   dirtyTabs.delete(tabId);
   hydrating.delete(tabId);
+  pendingTelemetry.delete(tabId);
   await chrome.storage.local.remove(`tabData_${tabId}`);
 });
 
@@ -340,6 +442,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
   if (changeInfo.status === "loading" && changeInfo.url) {
     const fresh = defaultTabData(changeInfo.url);
     tabDataCache.set(tabId, fresh);
+    pendingTelemetry.delete(tabId);
     // Flush immediately so the popup doesn't show the previous page's
     // stale data if opened right after navigation starts.
     await chrome.storage.local.set({ [`tabData_${tabId}`]: fresh });

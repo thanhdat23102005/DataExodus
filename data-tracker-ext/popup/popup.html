@@ -6,59 +6,113 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <!-- HEADER -->
-  <div class="header">
-    <h1>🛡️ DataExodus Observer</h1>
-    <p id="current-domain">Loading...</p>
+
+  <!-- ==================== ONBOARDING VIEW ==================== -->
+  <div id="onboarding-view" class="hidden">
+    <div class="onboarding-header">
+      <div class="shield-icon">🛡️</div>
+      <h2>DataExodus Setup</h2>
+      <p>Configure your privacy monitor.</p>
+    </div>
+
+    <div class="input-group">
+      <label for="pii-input">Email or phone number (to track leaks)</label>
+      <input type="text" id="pii-input" placeholder="e.g. test@example.com">
+      <p id="pii-error" class="input-error hidden"></p>
+      <p class="disclaimer">
+        🔒 <strong>Hashed locally:</strong> your identifier is hashed here in the browser
+        (MD5, SHA-1, SHA-256, SHA-512, across every common normalisation) and the raw value
+        never leaves this device.
+      </p>
+      <p class="disclaimer">
+        📡 <strong>If a gateway is configured</strong>, hostnames, tracker names and risk scores
+        for pages you visit are sent to it. Full page URLs are never sent. You can change the
+        address or switch this off in Settings.
+      </p>
+    </div>
+
+    <button id="save-pii-btn" class="primary-btn">Initialize Protection</button>
   </div>
 
-  <!-- PII ALERT -->
-  <div id="pii-alert" class="pii-alert hidden">
-    🚨 PII HASH LEAK DETECTED 🚨
-    <div id="pii-detail" class="pii-detail"></div>
+  <!-- ==================== MAIN DASHBOARD VIEW ==================== -->
+  <div id="main-view" class="hidden">
+    <div class="header">
+      <h1>🛡️ DataExodus Observer</h1>
+      <p id="current-domain">Loading...</p>
+      <button id="open-settings-btn" class="text-btn" title="Settings">⚙️</button>
+    </div>
+
+    <div id="pii-alert" class="pii-alert hidden">
+      🚨 PII HASH LEAK DETECTED 🚨
+      <div id="pii-detail" class="pii-detail"></div>
+    </div>
+    <div id="pii-note" class="pii-note hidden"></div>
+
+    <div class="risk-section">
+      <div class="risk-gauge">
+        <div class="risk-fill" id="risk-fill"></div>
+      </div>
+      <div class="risk-label">
+        Risk Score: <strong id="risk-score">0</strong>/100 —
+        <span id="risk-text">Safe</span>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-value" id="total-reqs">0</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="third-party-reqs">0</div>
+        <div class="stat-label">3rd-Party</div>
+      </div>
+      <div class="stat-box danger">
+        <div class="stat-value" id="tracker-reqs">0</div>
+        <div class="stat-label">Trackers</div>
+      </div>
+      <div class="stat-box info">
+        <div class="stat-value" id="country-count">0</div>
+        <div class="stat-label">Countries</div>
+      </div>
+    </div>
+
+    <div id="countries-section" class="hidden">
+      <h2>🌍 Data sent to:</h2>
+      <div id="countries-list" class="countries-list"></div>
+    </div>
+
+    <h2>Who is collecting your data?</h2>
+    <div id="domain-list"></div>
+
+    <div id="gateway-status" class="gateway-status off">Gateway: unknown</div>
   </div>
 
-  <!-- RISK SCORE GAUGE -->
-  <div class="risk-section">
-    <div class="risk-gauge">
-      <div class="risk-fill" id="risk-fill"></div>
+  <!-- ==================== SETTINGS VIEW ==================== -->
+  <div id="settings-view" class="hidden">
+    <div class="onboarding-header">
+      <div class="shield-icon">⚙️</div>
+      <h2>Settings</h2>
     </div>
-    <div class="risk-label">
-      Risk Score: <strong id="risk-score">0</strong>/100 —
-      <span id="risk-text">Safe</span>
+
+    <div class="input-group">
+      <label for="gateway-url">Gateway endpoint (Raspberry Pi backend)</label>
+      <input type="text" id="gateway-url" placeholder="http://192.168.0.83:5000/api/telemetry">
+      <p class="disclaimer">
+        The address changes with the network the Pi is on, so it is editable rather than
+        fixed in code. Hostnames and risk scores are sent here; full page URLs are not.
+      </p>
+      <label class="checkbox-row">
+        <input type="checkbox" id="gateway-enabled">
+        <span>Send telemetry to gateway</span>
+      </label>
     </div>
+
+    <button id="save-settings-btn" class="primary-btn">Save</button>
+    <button id="back-btn" class="secondary-btn">Back</button>
+    <button id="reset-pii-btn" class="danger-btn">Reset protected identifier</button>
   </div>
 
-  <!-- STATS ROW -->
-  <div class="stats">
-    <div class="stat-box">
-      <div class="stat-value" id="total-reqs">0</div>
-      <div class="stat-label">Total</div>
-    </div>
-    <div class="stat-box warning">
-      <div class="stat-value" id="third-party-reqs">0</div>
-      <div class="stat-label">3rd-Party</div>
-    </div>
-    <div class="stat-box danger">
-      <div class="stat-value" id="tracker-reqs">0</div>
-      <div class="stat-label">Trackers</div>
-    </div>
-    <div class="stat-box info">
-      <div class="stat-value" id="country-count">0</div>
-      <div class="stat-label">Countries</div>
-    </div>
-  </div>
-
-  <!-- COUNTRIES -->
-  <div id="countries-section" class="hidden">
-    <h2>🌍 Data sent to:</h2>
-    <div id="countries-list" class="countries-list"></div>
-  </div>
-
-  <!-- DOMAIN LIST -->
-  <h2>Who is collecting your data?</h2>
-  <div id="domain-list"></div>
-
-  <script src="popup.js"></script>
+  <script type="module" src="popup.js"></script>
 </body>
 </html>

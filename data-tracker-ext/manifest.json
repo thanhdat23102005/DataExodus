@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "DataExodus Observer",
-  "version": "3.0",
+  "version": "3.3",
   "description": "Tracks where your data goes, scores privacy risk, detects PII hash leaks, and blocks malware.",
   "permissions": ["webRequest", "storage", "tabs", "declarativeNetRequest"],
   "host_permissions": ["<all_urls>"],
