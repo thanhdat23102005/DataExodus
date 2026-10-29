@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; frame-src 'self'; connect-src 'none'; img-src data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataExodus / Quarantine</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="quarantine.css"></head>
+<body><main><div class="eyebrow">DATAEXODUS / QUARANTINE</div><h1>This destination is held.</h1>
+<p class="warning">This page has not loaded the destination. Its scripts, forms, images and network connections are not opened here.</p>
+<section class="card"><h2>Why you are here</h2><p id="reason">A protected navigation was routed here, or this page was opened directly.</p><p id="origin">Destination details unavailable.</p><small id="scope">Offline inspection page. A preview runs only when you ask for it, in a separate throwaway browser on the DataExodus service (your Raspberry Pi or this computer).</small></section>
+<h2>Offline summary</h2><p class="muted">Only an escaped summary is shown below. The original destination is never embedded or fetched by this page.</p>
+<iframe id="preview" title="Offline destination summary" sandbox="" referrerpolicy="no-referrer"></iframe>
+<div class="row" id="actions">
+<button id="sandboxPreview" hidden>Preview in isolated sandbox</button>
+<button id="direct" class="secondary" hidden>Open advertiser page directly (skip the ad network)</button>
+<button id="back" class="secondary">Go back</button>
+<button id="close" class="secondary">Close this tab</button>
+<button id="original" class="danger" hidden>Open original link anyway</button></div>
+<p id="status" role="status"></p>
+<section id="sandbox" hidden>
+<h2>Sandbox result</h2><p class="verdict" id="verdict"></p><p class="muted" id="detail"></p>
+<div id="assessment" hidden><p class="score" id="score"></p><ul id="reasons"></ul><p class="muted" id="note"></p></div>
+<div class="row"><button id="openClean" hidden>Open clean destination</button></div>
+<h3>Where the link really goes</h3><ol id="chain"></ol>
+<p class="muted">Clean destination (click IDs removed): <span class="url" id="clean"></span></p>
+<h3>Trackers the landing page loaded in the sandbox</h3><ul id="trackers"></ul>
+<h3>Screenshot taken inside the sandbox</h3><div id="shot"></div><p class="muted" id="title"></p></section>
+<p><small>The sandbox has no cookies, logins, storage or downloads and refuses local-network addresses. A clean result is not proof of safety. To review a false positive, change the site's policy in Guard Settings. No automatic release or cloud lookup occurs here.</small></p>
+</main><script src="quarantine.js"></script></body></html>

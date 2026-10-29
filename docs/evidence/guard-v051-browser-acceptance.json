@@ -1,0 +1,65 @@
+{
+  "provenance": "real_chromium_extension_loopback",
+  "sandbox_service": "started",
+  "browser_version": "156.0.8078.4",
+  "results": [
+    {
+      "phase": "baseline",
+      "identifier_deliveries": 4,
+      "post_collector_deliveries": 2,
+      "first_party_submits": 1,
+      "ad_navigations": 3,
+      "ad_clicks_from_user": 1,
+      "advertiser_click_ids_from_user": 1,
+      "advertiser_clean_visits": 0,
+      "expected": {
+        "identifier_deliveries": 4,
+        "post_collector_deliveries": 2,
+        "first_party_submits": 1,
+        "ad_navigations": 3,
+        "ad_clicks_from_user": 1,
+        "advertiser_click_ids_from_user": 1,
+        "advertiser_clean_visits": 0
+      },
+      "checks": {
+        "legitimate_document_opened": true,
+        "ad_click_landed_with_click_id": true
+      },
+      "passed": true
+    },
+    {
+      "phase": "protected",
+      "identifier_deliveries": 0,
+      "post_collector_deliveries": 1,
+      "first_party_submits": 1,
+      "ad_navigations": 0,
+      "ad_clicks_from_user": 0,
+      "advertiser_click_ids_from_user": 0,
+      "advertiser_clean_visits": 1,
+      "expected": {
+        "identifier_deliveries": 0,
+        "post_collector_deliveries": 1,
+        "first_party_submits": 1,
+        "ad_navigations": 0,
+        "ad_clicks_from_user": 0,
+        "advertiser_click_ids_from_user": 0,
+        "advertiser_clean_visits": 1
+      },
+      "checks": {
+        "learned_rule_installed": true,
+        "legitimate_document_opened": true,
+        "quarantine_tabs_for_overlay_and_direct_ad": true,
+        "ad_click_held_in_quarantine": true,
+        "click_url_removed_from_address_bar": true,
+        "sandbox_followed_redirect_chain": true,
+        "sandbox_removed_click_ids": true,
+        "sandbox_screenshot_shown": true,
+        "advertiser_page_opened_clean": true,
+        "sandbox_visit_reached_advertiser_anonymously": true,
+        "chrome_rule_matches_recorded": true,
+        "identifier_never_in_evidence": true
+      },
+      "passed": true
+    }
+  ]
+}

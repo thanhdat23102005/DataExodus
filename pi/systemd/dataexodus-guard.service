@@ -1,0 +1,39 @@
+[Unit]
+Description=DataExodus Guard service and isolated sandbox browser (127.0.0.1:8010, reached through SSH)
+Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI_VI.md
+After=network-online.target dataexodus-firewall.service
+Wants=network-online.target
+# Never open untrusted pages without the egress firewall in place.
+Requires=dataexodus-firewall.service
+
+[Service]
+User=dataexodus
+Group=dataexodus
+WorkingDirectory=/opt/dataexodus
+EnvironmentFile=/etc/dataexodus/dataexodus.env
+ExecStart=/opt/dataexodus/.venv/bin/python -m uvicorn protection.api:app --host 127.0.0.1 --port 8010 --no-access-log
+Restart=on-failure
+RestartSec=5
+# Two headless Chromiums fit comfortably in a Pi 5's memory.
+MemoryMax=2G
+TasksMax=1024
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadWritePaths=/var/lib/dataexodus
+ProtectHome=yes
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+# Not set on purpose: RestrictNamespaces (Chromium's sandbox uses user
+# namespaces) and MemoryDenyWriteExecute (JavaScript JIT).
+
+[Install]
+WantedBy=multi-user.target

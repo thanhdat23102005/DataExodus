@@ -1,0 +1,100 @@
+{
+  "provenance": "real_chromium_loopback_box_flow",
+  "generated": "2026-10-26T15:40:37.311645+00:00",
+  "python": "3.11.4",
+  "playwright": "1.64.0",
+  "chromium": "156.0.8078.4",
+  "passed": true,
+  "checks": {
+    "captive check redirects before the visitor chooses": true,
+    "DNS answers the captive name with the portal": true,
+    "welcome page asks before recording": true,
+    "captive check passes after joining": true,
+    "sample 'news' is rated low": true,
+    "sample 'deal' is rated caution": true,
+    "sample 'bank' is rated danger": true,
+    "sample 'captcha' is rated danger": true,
+    "a pasted scam text is checked": true,
+    "Safe Browse shows the sandbox page at 1:1 size": true,
+    "Safe Browse tap + type + Enter submitted the form on the sandbox": true,
+    "My device lists this device's lookups": true,
+    "lookups before joining are not recorded": true,
+    "tracker blocking applies to this device": true,
+    "blocked lookups are shown": true,
+    "cross-site form posts are refused": true,
+    "foreign Host headers are refused (DNS rebinding)": true,
+    "Forget this device deletes its lookups": true,
+    "after forgetting, the captive check shows the welcome page again": true
+  },
+  "details": {
+    "captive check redirects before the visitor chooses": [
+      302,
+      "http://127.0.0.10:65205/"
+    ],
+    "captive check passes after joining": 204,
+    "sample 'news' is rated low": "low Score 0 / 100",
+    "sample 'deal' is rated caution": "caution Score 35 / 100",
+    "sample 'bank' is rated danger": "danger Score 60 / 100",
+    "sample 'captcha' is rated danger": "danger Score 85 / 100",
+    "samples": {
+      "news": {
+        "expected": "low",
+        "level": "low",
+        "score": "Score 0 / 100",
+        "reasons": [
+          "No risk signals were observed."
+        ]
+      },
+      "deal": {
+        "expected": "caution",
+        "level": "caution",
+        "score": "Score 35 / 100",
+        "reasons": [
+          "+15 The page asked for permission to send notifications (a common scam tactic).",
+          "+5 The link bounces through other sites before it lands. (127.0.0.50 \u2192 127.0.0.51)",
+          "+5 The page contacts several other companies' servers. (3 other sites)",
+          "+5 This is a paid ad link: the ad network records the click. (Sample ad network (local lab))",
+          "+5 The address carries click-tracking IDs that identify this visit to the advertiser. (gclid)"
+        ]
+      },
+      "bank": {
+        "expected": "danger",
+        "level": "danger",
+        "score": "Score 60 / 100",
+        "reasons": [
+          "+30 A password or card form sends what you type to a different site. (sends to 127.0.0.57)",
+          "+15 The page asks for payment card details.",
+          "+10 The page uses wording common in scams. (\"verify your account\", \"unusual activity\", \"account will be suspended\")",
+          "+5 The link bounces through other sites before it lands. (127.0.0.55 \u2192 127.0.0.56)"
+        ]
+      },
+      "captcha": {
+        "expected": "danger",
+        "level": "danger",
+        "score": "Score 85 / 100",
+        "reasons": [
+          "+40 The page tried to put text on the clipboard (fake-CAPTCHA \"paste this command\" scams).",
+          "+35 The page tried to download a program or app installer. (browser_update.exe)",
+          "+10 The page uses wording common in scams. (\"verify you are human\")"
+        ]
+      }
+    },
+    "a pasted scam text is checked": "http://127.0.0.55:65206/s/kb7Q",
+    "Safe Browse tap + type + Enter submitted the form on the sandbox": [
+      1,
+      "http://127.0.0.57:65206/collect"
+    ],
+    "tracker blocking applies to this device": [
+      "0.0.0.0"
+    ],
+    "cross-site form posts are refused": 403,
+    "foreign Host headers are refused (DNS rebinding)": 403,
+    "Forget this device deletes its lookups": 0,
+    "after forgetting, the captive check shows the welcome page again": 302
+  },
+  "not_covered": [
+    "Wi-Fi radio and NetworkManager hotspot",
+    "nftables firewall",
+    "Raspberry Pi hardware"
+  ]
+}

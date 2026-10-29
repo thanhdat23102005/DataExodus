@@ -1,0 +1,11 @@
+Local smoke run of the Raspberry Pi services on Windows 11 (23 Oct 2026): pi.dnswatch on 127.0.0.1:5399 forwarding to 1.1.1.1 in block mode with the user's downloaded reference lists, pi.dns_report, and pi.box on 127.0.0.1:8020. Not a Raspberry Pi hardware run.
+[classify] 43279 domain rules, 23453 entity records; GeoIP=on
+www.abc.net.au               -> ['2.21.168.126']
+www.google-analytics.com     -> ['216.239.34.178', '216.239.38.178', '216.239.36.178']
+connect.facebook.net         -> ['157.240.11.22']
+www.ato.gov.au               -> ['23.33.238.106', '23.33.238.116', '23.33.238.112']
+dnswatch log: ['[dnswatch] 127.0.0.1:5399 -> 1.1.1.1, mode=block, 45,136 listed domains, clients 127.0.0.0/8']
+report: {'queries': 4, 'blocked': 0, 'tracker_queries': 1, 'located_answers': 4, 'offshore_answers': 2} owners: [['Google', 1], ['Facebook', 1]] countries: [['AU', 2], ['US', 2]]
+box /: 200 | DNS lookups card: True
+box /dns: 200
+box rebinding Host: 403

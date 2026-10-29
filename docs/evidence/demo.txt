@@ -1,0 +1,12 @@
+[process] Found 2 raw files
+[process] https://shop.example.com: 5 requests, 2 trackers
+[process] https://clinic.example.org: 5 requests, 2 trackers
+[process] Done. Database: reports/demo/before/demo.duckdb
+[export] 2 sessions → reports/demo/before
+[process] Found 2 raw files
+[process] https://shop.example.com: 3 requests, 0 trackers
+[process] https://clinic.example.org: 3 requests, 0 trackers
+[process] Done. Database: reports/demo/after/demo.duckdb
+[export] 2 sessions → reports/demo/after
+[demo] Open reports/demo/audit.html
+[demo] Synthetic fixtures only — no public websites contacted.

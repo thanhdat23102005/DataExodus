@@ -1,0 +1,60 @@
+[crawl] Starting 50 sites (dwell=8s)
+  [crawl] https://www.ato.gov.au: 1 requests, 0 fp events → government_135f2534a98844098a1189a197a81f10.json
+  [crawl] https://www.my.gov.au: 63 requests, 0 fp events → government_225b271f54e447c4b09648bf9c656abc.json
+  [crawl] https://www.health.gov.au: 26 requests, 0 fp events → government_2c667698a81242e4a80e6b6fc7e00af5.json
+  [crawl] https://www.homeaffairs.gov.au: 1 requests, 0 fp events → government_bd6473be1a5d4445acb36852a4eb279c.json
+  [crawl] https://www.defence.gov.au: 97 requests, 0 fp events → government_29f1e6d6b79748ae9790468144b6e099.json
+  [crawl] https://www.education.gov.au: 53 requests, 0 fp events → government_d25ddf9e416e4497a1d3948cc96ecad0.json
+  [crawl] https://www.dfat.gov.au: 35 requests, 0 fp events → government_94f78bff04ad4398a9fef852ad6e8b0c.json
+  [crawl] https://www.amsa.gov.au: 154 requests, 0 fp events → government_22b780fa446e4db3a9a3b45aa9ce85b7.json
+  [crawl] https://www.asic.gov.au: 32 requests, 0 fp events → government_4cdaa98956cc45debb5c42144c8d5444.json
+  [crawl] https://www.abs.gov.au: 68 requests, 0 fp events → government_b3591b63d9e94279b61ce122ce9fed0a.json
+  [crawl] https://www.healthdirect.gov.au: 53 requests, 0 fp events → health_b92227099e054577a75caec4602859bd.json
+  [crawl] https://www.betterhealth.vic.gov.au: 74 requests, 0 fp events → health_2f096389dd2e4e56808ec127e1e80942.json
+  [crawl] https://www.mayoclinic.org: 5 requests, 0 fp events → health_2386cdd0f31d431c8941b635248b7944.json
+  [crawl] https://www.webmd.com: 313 requests, 0 fp events → health_d71bea7193a44048a49e58b0750b7a28.json
+  [crawl] https://www.healthline.com: 196 requests, 0 fp events → health_27d64984dd594d10b7f4de2ae64be7bf.json
+  [crawl] https://www.nps.org.au: 31 requests, 0 fp events → health_2f7d9b32e5bc451ba2b5e2bfd9b3bfe9.json
+  [crawl] https://www.racgp.org.au: 128 requests, 0 fp events → health_5289856f95a34c91bbb6216ab047e870.json
+  [crawl] https://www.ama.com.au: 82 requests, 0 fp events → health_3818f2cb2350408abb1666205ad84da5.json
+  [crawl] https://www.bupa.com.au: 12 requests, 193 fp events → health_203a0fcf1fba4e2c9d3363c976e9a071.json
+  [crawl] https://www.medibank.com.au: 187 requests, 0 fp events → health_023a6aa19edc4c8aa9f6aa7ab68ed510.json
+  [crawl] https://www.unsw.edu.au: 89 requests, 0 fp events → education_73ae79eb33e64f5da51b72f9f0810b8c.json
+  [crawl] https://www.usyd.edu.au: 157 requests, 1 fp events → education_1d139f7662cb46878093ce7fae9e846d.json
+  [crawl] https://www.unimelb.edu.au: 17 requests, 0 fp events → education_a6c8a5b1e013430d85bc6aa6e3defeb7.json
+  [crawl] https://www.monash.edu: 17 requests, 0 fp events → education_dfddf350fc444b9fa069f89ebdc048b8.json
+  [crawl] https://www.uq.edu.au: 107 requests, 0 fp events → education_1ae1a52ee6804585b117e6921c02265d.json
+  [crawl] https://www.anu.edu.au: 94 requests, 0 fp events → education_631fee7735cb45af9790e500d3c27e5b.json
+  [crawl] https://www.uts.edu.au: 178 requests, 0 fp events → education_e9de2a7daa6a41d0bc5eabac04d40ec4.json
+  [crawl] https://www.qut.edu.au: 17 requests, 0 fp events → education_325a87b45df74e9aa9f112ac3cd91e2d.json
+  [crawl] https://www.rmit.edu.au: 184 requests, 0 fp events → education_03573b9ea33e45368f9f156d8687faa1.json
+  [crawl] https://www.deakin.edu.au: 17 requests, 0 fp events → education_47a3adcf05954c3ab7e1d2951f78f8cf.json
+  [crawl] https://www.news.com.au: 1 requests, 0 fp events → news_media_8fc232914a9f4de39e14e44c957aef29.json
+  [crawl] https://www.abc.net.au: 215 requests, 2 fp events → news_media_959cd63f332b44da8345f334edd00c92.json
+  [crawl] https://www.smh.com.au: 359 requests, 0 fp events → news_media_c54a0d23bf95484f9587908125caff43.json
+  [crawl] https://www.theguardian.com/au: 332 requests, 0 fp events → news_media_8a8063508d9940f1a8fb580c7f649d9b.json
+  [crawl] https://www.9news.com.au: 206 requests, 0 fp events → news_media_9a416689b8b94f8e82776622899beab9.json
+  [warn] https://www.7news.com.au: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://www.7news.com.au/", waiting until "domcontentloaded"
+
+  [crawl] https://www.7news.com.au: 437 requests, 3194 fp events → news_media_111fd072459249479b70a5a393d33841.json
+  [crawl] https://www.sbs.com.au: 182 requests, 0 fp events → news_media_9051cf28c48e41e187f2e98d8a44e708.json
+  [crawl] https://www.crikey.com.au: 189 requests, 0 fp events → news_media_d85299cf7cc74de98553d90dbb869050.json
+  [crawl] https://www.afr.com: 354 requests, 15 fp events → news_media_931b9d16758144e082cfcf8a43b02295.json
+  [crawl] https://www.dailytelegraph.com.au: 1 requests, 0 fp events → news_media_9d7be11276ba4cbc8fbf483b5adf4359.json
+  [crawl] https://www.amazon.com.au: 7 requests, 0 fp events → ecommerce_518a1d5cc0e0436283ceddf9c1294dd0.json
+  [crawl] https://www.ebay.com.au: 2 requests, 0 fp events → ecommerce_8b19a3d6125e4553bcdae1661f0c40a5.json
+  [crawl] https://www.kogan.com: 8 requests, 0 fp events → ecommerce_aa9e6f57f64640dca28f4d729fb8ea90.json
+  [crawl] https://www.catch.com.au: 2 requests, 0 fp events → ecommerce_edf4348d8a3647b5b47b3e0e977086a7.json
+  [crawl] https://www.jbhifi.com.au: 352 requests, 5 fp events → ecommerce_931452b4242b415581aae6d278994e2b.json
+  [warn] https://www.bigw.com.au: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.bigw.com.au/
+Call log:
+  - navigating to "https://www.bigw.com.au/", waiting until "domcontentloaded"
+
+  [crawl] https://www.bigw.com.au: 1 requests, 0 fp events → ecommerce_96fcf3b2f24849689aaafd49e1238238.json
+  [crawl] https://www.woolworths.com.au: 1 requests, 0 fp events → ecommerce_7a642886de154055aaebf78ef3fbe2b4.json
+  [crawl] https://www.coles.com.au: 14 requests, 193 fp events → ecommerce_4f8b71fcd6f04386a6747638ba6f65fc.json
+  [crawl] https://www.harveynorman.com.au: 14 requests, 193 fp events → ecommerce_0edef6f7765f47e0bb1e158630fb5695.json
+  [crawl] https://www.officeworks.com.au: 1 requests, 0 fp events → ecommerce_6c91802729f44c0487d9501843bd5b51.json
+[crawl] Done.

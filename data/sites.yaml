@@ -1,0 +1,63 @@
+# DataExodus: 50 Australian websites across 5 sectors
+# Frozen at Week 1 — do not modify mid-project
+
+sectors:
+  government:
+    - https://www.ato.gov.au
+    - https://www.my.gov.au
+    - https://www.health.gov.au
+    - https://www.homeaffairs.gov.au
+    - https://www.defence.gov.au
+    - https://www.education.gov.au
+    - https://www.dfat.gov.au
+    - https://www.amsa.gov.au
+    - https://www.asic.gov.au
+    - https://www.abs.gov.au
+
+  health:
+    - https://www.healthdirect.gov.au
+    - https://www.betterhealth.vic.gov.au
+    - https://www.mayoclinic.org  # popular in AU
+    - https://www.webmd.com       # popular in AU
+    - https://www.healthline.com  # popular in AU
+    - https://www.nps.org.au
+    - https://www.racgp.org.au
+    - https://www.ama.com.au
+    - https://www.bupa.com.au
+    - https://www.medibank.com.au
+
+  education:
+    - https://www.unsw.edu.au
+    - https://www.usyd.edu.au
+    - https://www.unimelb.edu.au
+    - https://www.monash.edu
+    - https://www.uq.edu.au
+    - https://www.anu.edu.au
+    - https://www.uts.edu.au
+    - https://www.qut.edu.au
+    - https://www.rmit.edu.au
+    - https://www.deakin.edu.au
+
+  news_media:
+    - https://www.news.com.au
+    - https://www.abc.net.au
+    - https://www.smh.com.au
+    - https://www.theguardian.com/au
+    - https://www.9news.com.au
+    - https://www.7news.com.au
+    - https://www.sbs.com.au
+    - https://www.crikey.com.au
+    - https://www.afr.com
+    - https://www.dailytelegraph.com.au
+
+  ecommerce:
+    - https://www.amazon.com.au
+    - https://www.ebay.com.au
+    - https://www.kogan.com
+    - https://www.catch.com.au
+    - https://www.jbhifi.com.au
+    - https://www.bigw.com.au
+    - https://www.woolworths.com.au
+    - https://www.coles.com.au
+    - https://www.harveynorman.com.au
+    - https://www.officeworks.com.au

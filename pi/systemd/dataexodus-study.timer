@@ -1,0 +1,12 @@
+[Unit]
+Description=Weekly DataExodus study run (Sunday 03:00 Pi time)
+Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI_VI.md
+
+[Timer]
+OnCalendar=Sun *-*-* 03:00:00
+# A Pi that was off on Sunday runs at the next boot.
+Persistent=true
+RandomizedDelaySec=15min
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,33 @@
+[Unit]
+Description=DataExodus sample links for the link checker (127.0.0.48/28, loopback only, fictional sites)
+Documentation=file:///opt/dataexodus/docs/HOTSPOT_VI.md
+After=network.target
+
+[Service]
+User=dataexodus
+Group=dataexodus
+WorkingDirectory=/opt/dataexodus
+EnvironmentFile=/etc/dataexodus/dataexodus.env
+ExecStart=/opt/dataexodus/.venv/bin/python -m examples.sample_links --port 8030
+Restart=on-failure
+RestartSec=5
+MemoryMax=128M
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

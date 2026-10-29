@@ -1,0 +1,33 @@
+#!/usr/sbin/nft -f
+# DataExodus: the service account opens untrusted pages (link checks, Safe
+# Browse, study crawls). It may reach the internet, but not this Pi's other
+# services, the router's admin page, any other device on the home network or
+# any phone on the DataExodus Wi-Fi (10.42.0.0/24 is inside 10.0.0.0/8).
+# This holds even if a page defeats the application's own address check (for
+# example by DNS rebinding between the check and the browser's lookup).
+#
+# Loaded by dataexodus-firewall.service; pi/install.sh replaces @UID@ with the
+# dataexodus account's uid. Other accounts on the Pi are not affected.
+# Check: sudo nft list table inet dataexodus
+
+table inet dataexodus
+delete table inet dataexodus
+
+table inet dataexodus {
+	chain output {
+		type filter hook output priority filter; policy accept;
+
+		meta skuid != @UID@ accept
+		ct state established,related accept
+
+		# Name lookups (also the DNS watch forwarding to your router)
+		meta l4proto { tcp, udp } th dport 53 accept
+		# The dashboard and the captive portal ask the Guard service (health, link checks)
+		ip daddr 127.0.0.1 tcp dport 8010 accept
+		# The sandbox may open the fictional sample links (examples/sample_links.py)
+		ip daddr 127.0.0.48/28 tcp dport 8030 accept
+
+		ip daddr { 0.0.0.0/8, 10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.168.0.0/16, 224.0.0.0/4, 240.0.0.0/4 } counter drop
+		ip6 daddr { ::/127, ::ffff:0:0/96, fc00::/7, fe80::/10, ff00::/8 } counter drop
+	}
+}

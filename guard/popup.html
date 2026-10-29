@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>DataExodus Guard</title><link rel="stylesheet" href="style.css">
+<body class="popup"><main><div class="eyebrow">DATAEXODUS / GUARD</div><h1>Protect. Explain. Verify.</h1>
+<p class="muted" id="mode">Loading local protection…</p><div class="metrics">
+<div class="metric"><b id="blocked">0</b><span>Requests blocked by Chrome rules</span></div>
+<div class="metric"><b id="quarantined">0</b><span>Navigations sent to quarantine</span></div>
+<div class="metric"><b id="observed">0</b><span>Identifier observations</span></div>
+<div class="metric"><b id="learned">0</b><span>Scoped collection rules (this session)</span></div></div>
+<p><small>Counts cover up to 200 recent local events. Rule-match feedback is available in this unpacked development build.</small></p>
+<div class="row"><button id="toggle">Pause protection</button><button class="secondary" id="xray">X-Ray this page</button><button class="secondary" id="settings">Settings</button></div>
+<p id="xrayResult" class="muted"></p>
+<h2>Recent evidence</h2><ul id="events"></ul>
+<div class="row"><button id="explain">Explain evidence</button><button class="secondary" id="export">Export evidence</button><button class="secondary" id="clear">Clear evidence</button><button class="secondary" id="resetLearning">Reset learned rules</button></div>
+<p id="advice" class="card" hidden></p><p id="status" role="status"></p>
+<small>Page reports are advisory. No events does not mean a site is safe.</small></main><script src="popup.js"></script></body></html>

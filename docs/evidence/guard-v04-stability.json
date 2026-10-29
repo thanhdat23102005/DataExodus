@@ -1,0 +1,40 @@
+{
+    "description":  "Consecutive real-Chromium acceptance runs of Guard 0.4 (python -m examples.run_guard_acceptance), Windows 11, 23 Oct 2026. Three earlier development runs failed and are not counted: run1 because Chrome refused the SHA-512 identity regex (a product bug, fixed: CHANGES_FINAL.md); run2 and run3 because of harness checks (clicks faster than Guard's 1.5 s per-tab quarantine limit; extension tab URLs hidden without the tabs permission), fixed in the harness.",
+    "runs":  [
+                 {
+                     "run":  "run4",
+                     "sandbox_service":  "started",
+                     "browser":  "153.0.8010.12",
+                     "baseline":  true,
+                     "protected":  true
+                 },
+                 {
+                     "run":  "stab1",
+                     "sandbox_service":  "started",
+                     "browser":  "153.0.8010.12",
+                     "baseline":  true,
+                     "protected":  true
+                 },
+                 {
+                     "run":  "stab2",
+                     "sandbox_service":  "started",
+                     "browser":  "153.0.8010.12",
+                     "baseline":  true,
+                     "protected":  true
+                 },
+                 {
+                     "run":  "stab3",
+                     "sandbox_service":  "started",
+                     "browser":  "153.0.8010.12",
+                     "baseline":  true,
+                     "protected":  true
+                 },
+                 {
+                     "run":  "final",
+                     "sandbox_service":  "started",
+                     "browser":  "153.0.8010.12",
+                     "baseline":  true,
+                     "protected":  true
+                 }
+             ]
+}

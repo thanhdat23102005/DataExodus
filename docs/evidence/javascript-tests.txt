@@ -1,0 +1,13 @@
+✔ crawler init script executes hooks before page scripts (4.185409ms)
+✔ request phases merge by requestId despite differing timestamps (4.511784ms)
+✔ pause discards unsent captured traffic (1.626214ms)
+✔ agent requests are excluded from capture (1.341961ms)
+✔ audit report switches captures, filters findings and renders evidence (406.971083ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1175.701373

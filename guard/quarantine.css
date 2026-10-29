@@ -1,0 +1,6 @@
+iframe{width:100%;min-height:200px;border:1px solid #c6dcd2;border-radius:12px;background:white;margin:10px 0 18px}#origin{overflow-wrap:anywhere;font-weight:650}
+h3{font-size:15px;margin:20px 0 6px}.url{font:13px ui-monospace,monospace;overflow-wrap:anywhere}ol,ul{padding-left:20px}li{margin:3px 0;overflow-wrap:anywhere}
+#shot img{width:100%;border:1px solid #d7e4e0;border-radius:10px;display:block}.verdict{font-size:18px;font-weight:700}.clean{color:#0e7461}.tracking{color:#9a6a00}
+button.danger{background:#fff;color:#b42318;border:1px solid #e5c1bd}#sandbox{border-top:1px solid #dce8e2;margin-top:18px}
+.score{font-size:20px;font-weight:800;border-radius:12px;padding:10px 14px}.score.low{background:#e3f5ec;color:#0e7a5a}
+.score.caution{background:#fff1dc;color:#9a5200}.score.danger{background:#fde7e4;color:#b42318}.score.unknown{background:#eef1f2;color:#587078}

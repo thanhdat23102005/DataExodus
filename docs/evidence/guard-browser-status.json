@@ -1,0 +1,13 @@
+{
+  "version": "0.4.0",
+  "status": "completed",
+  "browser": "Playwright Chromium 153.0.8010.12 (Windows 11)",
+  "extension_loaded_in_real_browser": true,
+  "consecutive_passing_runs": 5,
+  "acceptance": "docs/evidence/guard-v04-browser-acceptance.json",
+  "stability": "docs/evidence/guard-v04-stability.json",
+  "live_gemini_call": false,
+  "live_web_risk_call": false,
+  "raspberry_pi_hardware_run": false,
+  "superseded": "Guard 0.3 status (browser executable absent) recorded in earlier snapshots"
+}

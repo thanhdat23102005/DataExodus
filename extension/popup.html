@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { width: 320px; padding: 16px; font-family: system-ui, sans-serif; }
+    h1 { font-size: 16px; margin: 0 0 12px; }
+    .stat { display: flex; justify-content: space-between; margin: 6px 0; }
+    .stat span:first-child { color: #555; }
+    .stat span:last-child { font-weight: 600; }
+    button { width: 100%; margin-top: 12px; padding: 8px; cursor: pointer; }
+    .status { font-size: 12px; color: #888; margin-top: 8px; text-align: center; }
+    .alert { background: #fee; border: 1px solid #fcc; padding: 8px; border-radius: 4px; margin-top: 8px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h1>DataExodus</h1>
+  <div class="stat"><span>Total requests</span><span id="total">—</span></div>
+  <div class="stat"><span>Trackers</span><span id="trackers">—</span></div>
+  <div class="stat"><span>Offshore</span><span id="offshore">—</span></div>
+  <div class="stat"><span>PII detected</span><span id="pii">—</span></div>
+  <button id="toggle">Pause collection</button>
+  <div class="status" id="status">Agent: checking...</div>
+  <div id="alerts"></div>
+  <script src="popup.js"></script>
+</body>
+</html>

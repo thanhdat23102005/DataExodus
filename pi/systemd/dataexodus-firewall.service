@@ -1,0 +1,14 @@
+[Unit]
+Description=DataExodus: keep the sandbox and crawler account off the local network (nftables)
+Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI_VI.md
+Before=network-pre.target dataexodus-guard.service dataexodus-study.service
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/nft -f /etc/dataexodus/nftables-dataexodus.nft
+ExecStop=/usr/sbin/nft delete table inet dataexodus
+
+[Install]
+WantedBy=multi-user.target

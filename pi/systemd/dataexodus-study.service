@@ -1,0 +1,35 @@
+[Unit]
+Description=DataExodus scheduled study run (crawl the frozen site list, process, report, audit)
+Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI_VI.md
+After=network-online.target dataexodus-firewall.service
+Wants=network-online.target
+Requires=dataexodus-firewall.service
+
+[Service]
+Type=oneshot
+User=dataexodus
+Group=dataexodus
+WorkingDirectory=/opt/dataexodus
+EnvironmentFile=/etc/dataexodus/dataexodus.env
+# Refresh only the daily URLhaus list (DNS watch block mode). The study's own
+# reference lists stay fixed, so week-to-week audits remain comparable.
+ExecStartPre=-/opt/dataexodus/.venv/bin/python setup_data.py --refresh-threats
+ExecStart=/opt/dataexodus/.venv/bin/python -m pi.study_run
+TimeoutStartSec=3h
+Nice=10
+MemoryMax=2G
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadWritePaths=/var/lib/dataexodus
+ProtectHome=yes
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK

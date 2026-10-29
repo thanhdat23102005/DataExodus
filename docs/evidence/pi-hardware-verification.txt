@@ -1,0 +1,55 @@
+DataExodus Box 0.5 on Raspberry Pi hardware, 27 October 2026
+==============================================================
+
+Device: Raspberry Pi 5 Model B Rev 1.1, 4 GB RAM, Debian GNU/Linux 13 (trixie) Raspberry Pi OS,
+kernel 6.18.50+rpt-rpi-2712, aarch64, Python 3.13, system Chromium /usr/bin/chromium.
+Uplink at the time: home Wi-Fi (wlan0, 192.168.0.83); no Ethernet cable, so the hotspot was not enabled.
+Older DataExodus services from ~/DataExo (dataexodus-dns on UDP 53, dataexodus-app on 0.0.0.0:5000)
+were stopped and disabled first, with the owner's agreement; their files were left in place.
+
+1. Installer: sudo bash pi/install.sh (run detached, log ~/dataexodus-install.log), exit code 0
+   pip on aarch64/cp313: all wheels prebuilt (piwheels/PyPI), nothing compiled.
+   Reference lists reused from the laptop (setup_data.py skipped all four files).
+   Installer self-checks:
+     Guard service:        ok
+     Dashboard:            ok
+     Firewall:             service account cannot reach 192.168.0.1 (as intended)
+     Internet:             ok
+
+2. Services (systemctl is-active)
+     dataexodus-firewall    active
+     dataexodus-guard       active
+     dataexodus-box         active
+     dataexodus-dnswatch    active
+     dataexodus-samples     active   (enabled for this check; pi/hotspot.sh enables it too)
+
+3. DNS watch on 127.0.0.1:53, upstream "auto" (the uplink's resolver)
+     example.com                  -> ['172.66.147.243', '104.20.23.154']
+     www.google-analytics.com     -> ['10.10.10.1']   <- this home network's own DNS filter answers
+                                                         ad/tracker names with 10.10.10.1
+
+4. Link checks: headless Chromium on the Pi under systemd, Chromium's own sandbox on
+   (DATAEXODUS_CHROMIUM_SANDBOX=1), POST /sandbox/preview with the Guard token
+     http://127.0.0.49:8030/... (sample news)    low      0   3.6 s  screenshot  opened on: Lab
+     http://127.0.0.50:8030/aclk... (sample ad)   caution 35   3.7 s
+       +15 notification prompt, +5 cross-site redirect, +5 third parties (3), +5 ad click, +5 click IDs (gclid)
+     http://127.0.0.55:8030/s/kb7Q (fake bank)    danger  60   3.6 s
+       +30 password/card form sends to another site, +15 card form, +10 scam wording, +5 cross-site redirect
+     http://127.0.0.58:8030/verify (fake CAPTCHA) danger  85   3.6 s
+       +40 clipboard write, +35 program download (browser_update.exe), +10 scam wording
+     https://www.abc.net.au/news (real site)      low     10   5.3 s
+       +5 third parties (3), +5 servers outside Australia (US); countries seen: AU, US
+   Same levels and scores as the Windows real-browser run (docs/evidence/box-v05-acceptance.json).
+
+5. Safe Browse: POST /sandbox/browse on the fake bank page
+     start: ok, picture returned, 2.1 s; scroll: ok, 1.1 s (expires_in 118 s); close: {'closed': True}
+
+6. Firewall for the sandbox account (uid dataexodus)
+     curl http://127.0.0.1:8020/ (dashboard)       exit 28: dropped, as intended
+     curl http://127.0.0.49:8030/ (sample links)   exit 0: allowed, as intended
+     nft counters: IPv4 private/loopback drop rule 6 packets, IPv6 drop rule 2 packets
+
+7. Resources after the checks: 839 MB of 4049 MB RAM used, 3209 MB available; CPU 56 C.
+
+Not verified on the hardware yet: the Wi-Fi access point and captive portal (needs Ethernet or USB
+tethering for the uplink), captive pop-ups on real iPhone/Android phones, the portal on 10.42.0.1:80.

@@ -1,0 +1,62 @@
+[
+  {
+    "kind": "identifier",
+    "representation": "raw",
+    "transport": "url",
+    "receiver": "collector"
+  },
+  {
+    "kind": "identifier",
+    "representation": "sha256",
+    "transport": "url",
+    "receiver": "collector"
+  },
+  {
+    "kind": "identifier",
+    "representation": "raw",
+    "transport": "body",
+    "receiver": "collector"
+  },
+  {
+    "kind": "identifier",
+    "representation": "raw",
+    "transport": "url",
+    "receiver": "unlisted_url"
+  },
+  {
+    "kind": "identifier",
+    "representation": "raw",
+    "transport": "body",
+    "receiver": "post_collector"
+  },
+  {
+    "kind": "identifier",
+    "representation": "raw",
+    "transport": "body",
+    "receiver": "post_collector"
+  },
+  {
+    "kind": "first_party_submit",
+    "representation": "raw",
+    "transport": "body",
+    "receiver": "site"
+  },
+  {
+    "kind": "popup_navigation"
+  },
+  {
+    "kind": "popup_navigation"
+  },
+  {
+    "kind": "popup_navigation"
+  },
+  {
+    "kind": "ad_click",
+    "from_user_page": true
+  },
+  {
+    "kind": "advertiser_visit",
+    "click_id": true,
+    "from_user_page": true
+  }
+]

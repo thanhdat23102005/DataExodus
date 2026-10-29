@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>DataExodus Guard settings</title><link rel="stylesheet" href="style.css">
+<body><main><div class="eyebrow">DATAEXODUS / LOCAL FIRST</div><h1>Protection settings</h1>
+<p>Prototype for controlled testing. Keep the original research extension disabled while using Guard to avoid duplicate capture.</p>
+<form id="form">
+<label><input id="enabled" type="checkbox"> Enable network protection</label>
+<label><input id="popupGuard" type="checkbox"> Block suspicious scripted popups and transparent link overlays</label>
+<label><input id="quarantineAds" type="checkbox"> Route ad clicks, listed-domain navigation and suspicious popups to the quarantine page (preview them in the sandbox from there)</label>
+<label><input id="preventCollection" type="checkbox"> Pre-block third-party URLs containing the configured email or supported hash</label>
+<label><input id="learnCollection" type="checkbox"> After a local identity observation, block follow-up collection from that site to that destination for this browser session</label>
+<p><small>POST-body inspection may happen after the first send. Follow-up rules apply only to cross-site subresources; same-site submissions are preserved. Saving settings or Reset learned rules clears learned policy.</small></p>
+<p class="warning">Popup checks are best effort and can interrupt legitimate sign-in or payment windows. Allow a trusted site below if needed. Page scripts can bypass the popup hook; Chrome network rules remain separate.</p>
+<label>Blocked destination domains, one per line<textarea id="blockedDomains"></textarea></label>
+<label>Import a reviewed audit domain export (up to 500 domains)<input id="ruleImport" type="file" accept="application/json,.json"></label>
+<small>Small starter list: doubleclick.net, googlesyndication.com, googleadservices.com. Hand-maintained tracker targets, not a comprehensive malware feed. Rules include subdomains.</small>
+<label>Sites allowed to bypass protection, one per line<textarea id="allowSites"></textarea></label>
+<small>Allowing a site disables popup checks and outgoing network rules for that site. Rules also cover its subdomains.</small>
+<label><input id="labMode" type="checkbox"> Enable local lab rules for 127.0.0.2 and 127.0.0.3</label>
+<label>Protected email, kept in this browser profile (use a synthetic identity for the demo)<input id="testEmail" type="email" autocomplete="off" placeholder="student.demo@example.com"></label>
+<small>Matches raw email and SHA-1/256/512 hex. URL protection uses browser rules before send; body observation may occur after send. Values and digests stay local and are absent from AI requests and evidence exports.</small>
+<h2>DataExodus service (this computer or Raspberry Pi)</h2>
+<p>Guard talks to <code>http://127.0.0.1:8010</code>. Run the service on this computer, or on the Raspberry Pi and connect with <code>pi\connect-pi.ps1</code> (an SSH tunnel: the Pi's service is never exposed on your network). It explains evidence, checks URLs and opens quarantined links in a throwaway sandbox browser. Provider keys stay on that service.</p>
+<label>Local service token<input id="apiToken" type="password" autocomplete="off"></label>
+<label><input id="cloudOptIn" type="checkbox"> Send only selected signal types and enforcement labels to Gemini when I click “Explain evidence”</label>
+<p><small>No page text, domain names, URLs, identifiers or matched digests are sent on the Gemini route. Cloud explanations remain advisory.</small></p>
+<button type="submit">Save and apply rules</button></form>
+<h2>Check one URL for known threats</h2>
+<p>This is a manual reputation lookup, not automatic protection for every navigation. A “not listed” result is not proof of safety.</p>
+<label>URL to check<input id="lookupURL" type="url" placeholder="https://example.com/"></label>
+<label><input id="lookupConsent" type="checkbox"> Send this URL, including its path and query, to Google Web Risk. I have removed private tokens.</label>
+<button id="lookup" class="secondary">Check URL</button><button id="blockDetected" hidden>Block this destination domain</button><p id="reputation" class="card" hidden></p>
+<p id="status" role="status"></p><p><small>Local evidence retains domain names and timestamps. Exported evidence may reveal browsing history. Clear it from the popup when finished.</small></p>
+</main><script src="core.js"></script><script src="options.js"></script></body></html>

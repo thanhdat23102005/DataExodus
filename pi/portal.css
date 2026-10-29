@@ -1,0 +1,41 @@
+:root{--ink:#14323a;--muted:#587078;--line:#dbe7e3;--bg:#e9f2f0;--card:#fff;--brand:#0e7461;--brand-ink:#fff;
+--low:#0e7a5a;--low-bg:#e3f5ec;--caution:#9a5200;--caution-bg:#fff1dc;--danger:#b42318;--danger-bg:#fde7e4}
+*{box-sizing:border-box}
+body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;margin:0;background:var(--bg);color:var(--ink)}
+header{background:var(--ink);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+header a{color:#fff;text-decoration:none}header .brand{font-weight:800;letter-spacing:.5px;margin-right:auto}
+header nav a{margin-left:14px;opacity:.85;font-size:15px}header nav a:hover{opacity:1;text-decoration:underline}
+main{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:26px;line-height:1.2;margin:12px 0}h2{font-size:19px;margin:22px 0 8px}h3{font-size:16px;margin:16px 0 6px}
+.eyebrow{font-size:12px;letter-spacing:2px;color:var(--brand);font-weight:800;text-transform:uppercase}
+.card{background:var(--card);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 1px 2px rgba(20,50,58,.06)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.tile{display:block;background:var(--card);border-radius:16px;padding:16px;color:inherit;text-decoration:none;border:2px solid transparent}
+.tile:hover{border-color:var(--brand)}.tile b{display:block;font-size:18px;margin-bottom:4px}
+.muted{color:var(--muted)}.small{font-size:14px}.tiny{font-size:12px}
+button,.button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 18px;background:var(--brand);color:var(--brand-ink);
+cursor:pointer;display:inline-block;text-decoration:none;margin:4px 6px 4px 0}
+button.secondary,.button.secondary{background:#dcebe7;color:var(--ink)}button.danger{background:var(--danger);color:#fff}
+input[type=text],input[type=url],textarea{font:inherit;width:100%;padding:12px;border:1px solid #b7cbc6;border-radius:12px;background:#fff;color:var(--ink)}
+textarea{min-height:88px;resize:vertical}
+label.check{display:flex;gap:10px;align-items:flex-start;margin:10px 0}label.check input{width:22px;height:22px;flex:none;margin-top:2px}
+.banner{border-radius:16px;padding:18px;margin:12px 0}.banner .label{font-size:30px;font-weight:800;line-height:1.1}
+.banner .score{font-size:17px;font-weight:700}
+.low{background:var(--low-bg);color:var(--low)}.caution{background:var(--caution-bg);color:var(--caution)}
+.danger{background:var(--danger-bg);color:var(--danger)}.unknown{background:#eef1f2;color:var(--muted)}
+.reasons{list-style:none;padding:0;margin:0}.reasons li{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.points{flex:none;min-width:44px;font-weight:800;color:var(--danger)}
+.badge{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;margin-left:4px}
+.badge.tracker{background:var(--danger-bg);color:var(--danger)}.badge.blocked{background:var(--ink);color:#fff}
+.url{font-family:ui-monospace,Consolas,monospace;font-size:13px;overflow-wrap:anywhere}
+ol.chain{padding-left:22px}ol.chain li{margin:4px 0}
+table{border-collapse:collapse;width:100%}td,th{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
+th{font-size:13px;color:var(--muted);white-space:nowrap}td.nowrap{white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}.stat{background:var(--card);border-radius:14px;padding:12px}
+.stat b{display:block;font-size:26px}
+.shot{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+.screen-wrap{overflow-x:auto;margin:8px 0}.screen{width:360px;height:640px;max-width:none;display:block;border:3px solid var(--ink);border-radius:18px;cursor:pointer}
+.controls{display:flex;flex-wrap:wrap;align-items:center}.typebar{display:flex;gap:6px;flex-wrap:wrap}.typebar input{flex:1;min-width:180px}
+.sample{border-top:1px solid var(--line);padding:10px 0}.sample:first-child{border-top:0}
+details{margin:10px 0}summary{cursor:pointer;font-weight:700}
+footer{max-width:760px;margin:0 auto;padding:8px 16px 28px;color:var(--muted);font-size:13px}

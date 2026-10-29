@@ -1,0 +1,9 @@
+{
+  "version": "0.3.0",
+  "manifest_files": "passed",
+  "javascript_syntax": "passed",
+  "python_compilation": "passed",
+  "chromium_executable_present": false,
+  "real_browser_acceptance": "pending",
+  "live_provider_calls": false
+}

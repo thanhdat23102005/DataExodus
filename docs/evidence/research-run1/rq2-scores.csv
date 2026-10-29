@@ -1,0 +1,51 @@
+sector,url,ok,error,level,score,reasons,trackers,tracker_owners,third_parties,countries,offshore,hops,final_url,refused_internal,seconds
+government,https://www.ato.gov.au,True,,low,20,trackers;third_parties;offshore;fingerprinting,3,Google;Silver Lake,6,US,True,0,https://www.ato.gov.au/,0,5.3
+government,https://www.my.gov.au,True,,low,5,offshore,0,,2,US,True,1,https://my.gov.au/,0,4.7
+government,https://www.health.gov.au,True,,low,20,trackers;third_parties;offshore;fingerprinting,2,Google,7,AU;US,True,0,https://www.health.gov.au/,0,4.3
+government,https://www.homeaffairs.gov.au,True,,caution,25,scam_wording;trackers;third_parties;offshore,4,Google;Silver Lake,7,AU;US,True,0,https://www.homeaffairs.gov.au/,0,5.1
+government,https://www.defence.gov.au,True,,low,20,trackers;third_parties;offshore;fingerprinting,2,Google,5,US,True,0,https://www.defence.gov.au/,0,5.0
+government,https://www.education.gov.au,True,,low,20,trackers;third_parties;offshore;fingerprinting,2,Google,5,AU;US,True,0,https://www.education.gov.au/,0,4.8
+government,https://www.dfat.gov.au,True,,low,20,trackers;third_parties;offshore;fingerprinting,2,Google,5,US,True,0,https://www.dfat.gov.au/,0,4.3
+government,https://www.amsa.gov.au,True,,low,20,trackers;third_parties;offshore,8,Google;Cloudflare;Microsoft;Silver Lake,10,US,True,0,https://www.amsa.gov.au/,0,5.2
+government,https://www.asic.gov.au,True,,low,15,trackers;third_parties;offshore,1,Google,6,US,True,0,https://www.asic.gov.au/,0,4.5
+government,https://www.abs.gov.au,True,,low,15,trackers;third_parties;offshore,3,Google;Hotjar,5,US,True,0,https://www.abs.gov.au/,0,4.6
+health,https://www.healthdirect.gov.au,True,,low,20,trackers;third_parties;offshore,10,Optimizely;Google;Microsoft;ByteDance;bzrcdn.openai.com;Reddit,17,AU;US,True,0,https://www.healthdirect.gov.au/,0,4.5
+health,https://www.betterhealth.vic.gov.au,True,,low,15,trackers;third_parties;offshore,5,Google;Microsoft,9,US,True,0,https://www.betterhealth.vic.gov.au/,0,5.8
+health,https://www.mayoclinic.org,True,,low,20,trackers;third_parties;offshore;fingerprinting,1,Akamai,3,AU;US,True,0,https://www.mayoclinic.org/,0,5.2
+health,https://www.webmd.com,True,,low,20,trackers;third_parties;offshore,8,TransUnion;silo56.p7cloud.net;lb.eu-1-id5-sync.com;lbs.eu-1-id5-sync.com;Lotame Solutions;Google,32,AU;FR;US,True,0,https://www.webmd.com/,0,6.3
+health,https://www.healthline.com,True,,low,20,trackers;third_parties;offshore,12,prod.adspsp.com;ingest.make.rvohealth.com;Google;Confiant;Index Exchange;Verizon Media;hm.adspsp.com;Merkle,29,AU;DE;US,True,0,https://www.healthline.com/,0,5.1
+health,https://www.nps.org.au,True,,caution,25,cross_site_redirects;trackers;third_parties;offshore;fingerprinting,4,Google;Hotjar,5,US,True,1,https://www.safetyandquality.gov.au/,0,4.3
+health,https://www.racgp.org.au,True,,low,20,trackers;third_parties;offshore,13,Cloudflare;Google;Microsoft;Hotjar;Quora;Crazy Egg,26,AU;SG;US,True,0,https://www.racgp.org.au/,0,4.9
+health,https://www.ama.com.au,True,,low,15,trackers;third_parties;offshore,4,Google;Adobe;insights.sitesearch360.com,7,AU;US,True,0,https://www.ama.com.au/,0,10.4
+health,https://www.bupa.com.au,True,,caution,35,scam_wording;trackers;third_parties;offshore;fingerprinting,7,Tealium;Adobe;FullStory;Google;Microsoft,12,AU;US,True,0,https://www.bupa.com.au/,0,8.1
+health,https://www.medibank.com.au,True,,caution,35,trackers;scam_wording;third_parties;offshore,17,Trustpilot;Google;Microsoft;ByteDance;Snap;Pinterest;Adobe;Reddit,28,AU;US,True,0,https://www.medibank.com.au/,0,7.0
+education,https://www.unsw.edu.au,True,,low,15,trackers;third_parties;offshore,1,rum.hlx.page,6,AU;US,True,0,https://www.unsw.edu.au/,0,4.6
+education,https://www.usyd.edu.au,True,,caution,30,trackers;cross_site_redirects;third_parties;offshore;fingerprinting,15,rum.hlx.page;Adobe;ContentSquare;Google;ByteDance;Microsoft;Snap;Quora,26,AU;CN;SG;US,True,1,https://www.sydney.edu.au/,0,6.3
+education,https://www.unimelb.edu.au,True,,low,15,trackers;third_parties;offshore,2,Tealium;Optimizely,5,US,True,0,https://www.unimelb.edu.au/,0,4.5
+education,https://www.monash.edu,True,,low,15,trackers;third_parties;offshore,3,Google;Tealium,6,AU;US,True,0,https://www.monash.edu/,0,5.4
+education,https://www.uq.edu.au,True,,low,20,trackers;third_parties;offshore,8,Google;Microsoft;Hotjar,15,AU;US,True,0,https://www.uq.edu.au/,0,4.5
+education,https://www.anu.edu.au,True,,low,15,trackers;third_parties;offshore,3,Cloudflare;Google,10,AU;US,True,0,https://www.anu.edu.au/,0,4.8
+education,https://www.uts.edu.au,True,,low,20,trackers;third_parties;offshore,9,Optimizely;Google;Siteimprove;Microsoft;ByteDance;Akamai,14,AU;US,True,0,https://www.uts.edu.au/,0,5.4
+education,https://www.qut.edu.au,True,,caution,25,trackers;third_parties;offshore,17,Adobe;Google;Microsoft;ByteDance;Snap;Reddit;Silver Lake,24,AU;US;VN,True,0,https://www.qut.edu.au/,0,11.2
+education,https://www.rmit.edu.au,True,,low,20,trackers;third_parties;offshore,14,Google;Adobe;Snap;ByteDance;Spotify;Microsoft;Reddit,25,AU;US,True,0,https://www.rmit.edu.au/,0,6.3
+education,https://www.deakin.edu.au,True,,caution,25,trackers;third_parties;offshore,17,Google;Microsoft;Akamai;Snap;Adobe;Amazon.com;Reddit;ByteDance,32,AU;US,True,0,https://www.deakin.edu.au/,1,6.7
+news_media,https://www.news.com.au,True,,caution,30,trackers;third_parties;offshore;fingerprinting,44,Tealium;Microsoft;Google;comScore;ByteDance;Optimizely;The Nielsen Company;Adobe,60,AU;US,True,0,https://www.news.com.au/,1,11.4
+news_media,https://www.abc.net.au,True,,low,15,trackers;third_parties;offshore,1,Google,7,AU;US,True,0,https://www.abc.net.au/,0,5.5
+news_media,https://www.smh.com.au,True,,caution,25,trackers;third_parties;offshore,19,Nine Entertainment;Google;Microsoft;Cloudflare;Spotify;The Nielsen Company;Salesforce.com;phx.bmtrcs.com,44,AU;US,True,0,https://www.smh.com.au/,1,9.1
+news_media,https://www.theguardian.com/au,True,,caution,25,trackers;third_parties;offshore,16,comScore;Confiant;The Nielsen Company;Permutive;Lotame Solutions;Verizon Media;lbs.eu-1-id5-sync.com;lb.eu-1-id5-sync.com,40,DE;KR;US,True,0,https://www.theguardian.com/au,0,5.7
+news_media,https://www.9news.com.au,True,,caution,25,trackers;cross_site_redirects;third_parties;offshore,12,Google;The Nielsen Company;Blockthrough;Outbrain;phx.bmtrcs.com;ab.dns-finder.com,32,AU;US,True,1,https://www.nine.com.au/#redirect=9news,1,6.0
+news_media,https://www.7news.com.au,False,Page.goto: Timeout 15000ms exceeded.,unknown,,,15,Google;Adobe;Index Exchange;Skimbit;static.qovani.com;Microsoft;Verizon Media,46,AU;SG;US,True,0,https://7news.com.au/,1,16.7
+news_media,https://www.sbs.com.au,True,,low,15,trackers;third_parties;offshore,3,New Relic;Adobe,17,AU;KR;US,True,0,https://www.sbs.com.au/,0,5.7
+news_media,https://www.crikey.com.au,True,,low,20,trackers;third_parties;offshore,9,Google;Automattic;Microsoft;Klaviyo;Lotame Solutions,17,AU;SG;US,True,0,https://www.crikey.com.au/,0,6.0
+news_media,https://www.afr.com,True,,caution,30,trackers;third_parties;offshore;fingerprinting,21,Nine Entertainment;Google;Cloudflare;Spotify;Fairfax Media;Microsoft;Salesforce.com;Reddit,53,AU;US,True,0,https://www.afr.com/,1,8.9
+news_media,https://www.dailytelegraph.com.au,True,,caution,35,trackers;cross_site_redirects;third_parties;offshore;fingerprinting,27,unifybots.com;Tealium;Optimizely;Outbrain;ByteDance;Crazy Egg;Microsoft;Pinterest,60,AU;US,True,4,https://www.dailytelegraph.com.au/,0,9.3
+ecommerce,https://www.amazon.com.au,True,,caution,25,scam_wording;third_parties;offshore;fingerprinting,0,,4,AU;US,True,0,https://www.amazon.com.au/,0,5.5
+ecommerce,https://www.ebay.com.au,True,,caution,35,scam_wording;trackers;third_parties;offshore;fingerprinting,7,eBay;Google;Pinterest;Tealium;Verizon Media,16,AU;SG;US,True,0,https://www.ebay.com.au/,0,7.7
+ecommerce,https://www.kogan.com,True,,caution,25,scam_wording;trackers;offshore;fingerprinting,1,Google,2,US,True,0,https://www.kogan.com/,0,4.0
+ecommerce,https://www.catch.com.au,True,,low,10,offshore;fingerprinting,0,,1,US,True,0,https://www.catch.com.au/,0,4.0
+ecommerce,https://www.jbhifi.com.au,True,,caution,55,notification_prompt;scam_wording;trackers;third_parties;offshore;device_prompt;fingerprinting,9,Optimizely;Shopify;Google;Amazon.com;Algolia,33,AU;US,True,0,https://www.jbhifi.com.au/,0,11.6
+ecommerce,https://www.bigw.com.au,True,,caution,45,notification_prompt;trackers;third_parties;offshore;fingerprinting,17,Adobe;Akamai;Google;Optimizely;ByteDance;Microsoft;Pinterest;ContentSquare,28,AU;US,True,0,https://www.bigw.com.au/,0,10.4
+ecommerce,https://www.woolworths.com.au,True,,caution,25,trackers;third_parties;offshore;fingerprinting,6,Adobe;Akamai,5,AU;US,True,0,https://www.woolworths.com.au/,0,6.1
+ecommerce,https://www.coles.com.au,True,,caution,40,scam_wording;trackers;third_parties;offshore;device_prompt;fingerprinting,8,Adobe;Google;FullStory,14,AU;SG;US,True,0,https://www.coles.com.au/,0,6.3
+ecommerce,https://www.harveynorman.com.au,True,,low,5,fingerprinting,0,,1,,False,0,https://www.harveynorman.com.au/,0,4.4
+ecommerce,https://www.officeworks.com.au,True,,caution,35,scam_wording;trackers;third_parties;offshore;fingerprinting,6,Adobe;Cloudflare,8,AU;SG;US,True,0,https://www.officeworks.com.au/,0,5.6

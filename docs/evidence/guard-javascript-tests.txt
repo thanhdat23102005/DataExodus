@@ -1,0 +1,26 @@
+✔ crawler init script executes hooks before page scripts (3.545999ms)
+✔ request phases merge by requestId despite differing timestamps (3.790016ms)
+✔ pause discards unsent captured traffic (1.695853ms)
+✔ agent requests are excluded from capture (0.90335ms)
+✔ network rules survive without AI; pause removes rules; site exceptions scoped by domain (1.543774ms)
+✔ reject URL paths, credentials and wildcards as domain rules (0.228203ms)
+✔ popup policy blocks unsolicited external windows but keeps direct links and same-origin docs (0.41844ms)
+✔ overlay needs external destination, low opacity and substantial geometry (0.256537ms)
+✔ raw and hash matches stay local; unrelated identities do not count (11.488116ms)
+✔ AI boundary strips domains, URL, body, digest and adversarial page text (0.552212ms)
+✔ MAIN-world popup hook preserves primary click handler and legitimate link windows (8.086624ms)
+✔ popup distinguishes evidence and renders advisory output as text, never HTML (115.758568ms)
+✔ options require URL disclosure consent before lookup and offer user blocking only for listed result (30.307399ms)
+✔ worker applies DNR without service; pause removes rules; page cannot change settings (5.960824ms)
+✔ rule failures are visible and never reported as applied (6.599846ms)
+✔ only network debug matches count as Chrome evidence; local identity observation stays separate (12.392898ms)
+✔ untrusted page reports cannot supply a threat verdict or become network evidence (1.279046ms)
+✔ audit report switches captures, filters findings and renders evidence (241.240372ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 872.957158

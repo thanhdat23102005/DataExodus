@@ -1,0 +1,100 @@
+# DataExodus: my own DNS block list, added from what I measured on this network.
+#
+# The hand-picked list (pi/dns_trackers.txt) ships with the project. This file is
+# the documented place for additions found in real use, and the DNS watch reloads
+# it without a restart. A name here also blocks its subdomains, so a rotating
+# subdomain cannot step around the entry.
+#
+# One domain per line. Give every entry a date and the evidence that justifies it:
+# a DNS block is a decision about someone's network, so it should be defensible.
+#
+# Limits: blocking the name stops the advertiser's content loading, but it does
+# not stop a tab from opening - the pop-under is opened by JavaScript inside the
+# page the user is already on. Full prevention needs the Guard extension, which
+# phone browsers cannot run, or Safe Browse on the Pi.
+
+# --------------------------------------------------------------------------
+# 2026-10-29 - the pop-under advertising chain on truyenvn.my.
+#
+# Method: my own DNS log (/var/lib/dataexodus/dnswatch.sqlite) held 79 lookups
+# of truyenvn.my from two of my own devices over 28-29 Oct. For each of those
+# lookups I took every name the SAME device resolved within 8 seconds that no
+# reference list covered and that was not already blocked - 245 distinct names,
+# grouped below by apex domain. Counts are co-occurrences, "dev" is how many of
+# my two devices resolved it.
+#
+# None of these are on any of the four reference lists
+# (EasyPrivacy 57,167 / URLhaus 1,832 / Tracker Radar / hand-picked 106).
+#
+# I block at the apex, not the hostname, because these are disposable hosts: the
+# first one I found used the random label pl29809298, and it changes per visit.
+#
+# Co-occurrence is not proof of causation. The entries below all appeared on both
+# devices or more than 90 times; I left the weaker and the ambiguous ones out and
+# listed them at the bottom instead of guessing.
+
+# 217 hits, 1 dev - oa.ophionborish.cfd
+ophionborish.cfd
+# 212 hits, 2 dev - lt.lepidpomps.com
+lepidpomps.com
+# 145 hits, 2 dev - pl29809298.* and one more random label
+effectivecpmnetwork.com
+# 126 hits, 2 dev - elia.packingmolters.cfd
+packingmolters.cfd
+# 100 hits, 2 dev
+meatusbyway.cfd
+# 94 hits, 2 dev
+worncalmy.cfd
+# 94 hits, 1 dev
+cylindrical-blow.com
+# 66 hits, 2 dev
+portalfluently.com
+# 66 hits, 2 dev
+flushpersist.com
+# 58 hits, 2 dev
+protrafficinspector.com
+# 48 hits, 2 dev
+zoologyfibre.com
+# 44 hits, 1 dev - littles.pellilecanthusrumples.qpon
+pellilecanthusrumples.qpon
+# 34 hits, 1 dev - rq.voileexcels.cfd
+voileexcels.cfd
+# 28 hits, 1 dev - gimmor.shallonparriedgolfed.qpon
+shallonparriedgolfed.qpon
+# 27 hits, 1 dev - hexoic.ribsiuds.qpon
+ribsiuds.qpon
+# 24 hits, 2 dev
+workdeadlinededicate.com
+# 24 hits, 1 dev
+gnawinglimnshairse.cfd
+# 16 hits, 2 dev
+kettledroopingcontinuation.com
+
+# --------------------------------------------------------------------------
+# Measured in the same windows and deliberately NOT blocked. Writing these down
+# matters as much as the blocks: a list that only records what it caught cannot
+# be reviewed.
+#
+# imggo.net        124 hits, 2 dev. dmd-image-content-sng-static-0.imggo.net.
+#                  Reads as the site's own image CDN - the comic pages. Blocking
+#                  it would break the content the reader came for, which is not
+#                  what this list is for.
+# wp.com           108 hits, 2 dev. i0/i1.wp.com, the WordPress image CDN. Same
+#                  reason: site images, not advertising.
+# cloudflareinsights.com
+#                  150 hits, 2 dev. Cloudflare's own page-analytics beacon. It
+#                  is a tracker, but it is the site operator's own measurement
+#                  rather than a third-party ad network, so it is a different
+#                  argument and I am not making it here.
+# 1rx.io           16 hits, 1 dev. indexww.com 14 hits, 1 dev. Real ad exchanges,
+#                  but only on one device and in low numbers - too thin to
+#                  justify on my own measurement.
+# easebar.com      20 hits, 1 dev, 5 subdomains. Could not identify it. Left out
+#                  rather than guessed at.
+# findjmind.com, v2006.com, realizationnewestfangs.com
+#                  16-18 hits, 1 dev each. Same shape as the entries above but
+#                  below the threshold I set, so not blocked.
+#
+# Google, Cloudflare (cdnjs), Microsoft, Bing and TikTok names also appear in
+# these windows. They are my own browser and operating system, not the page.
+# badssl.com is my own earlier TLS testing.

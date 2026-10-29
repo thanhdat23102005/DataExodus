@@ -1,0 +1,40 @@
+✔ crawler init script executes hooks before page scripts (76.899809ms)
+✔ request phases merge by requestId despite differing timestamps (40.338431ms)
+✔ pause discards unsent captured traffic (23.218003ms)
+✔ agent requests are excluded from capture (7.881789ms)
+✔ network rules survive without AI; pause removes rules; site exceptions scoped by domain (23.240438ms)
+✔ reject URL paths, credentials and wildcards as domain rules (13.762016ms)
+✔ popup policy blocks unsolicited external windows but keeps direct links and same-origin docs (3.650912ms)
+✔ overlay needs external destination, low opacity and substantial geometry (4.288972ms)
+✔ raw and hash matches stay local; unrelated identities do not count (77.189816ms)
+✔ AI boundary strips domains, URL, body, digest and adversarial page text (4.729516ms)
+✔ identity regexes escape metacharacters and distinguish raw, encoded and hashed URLs (9.282637ms)
+✔ known-ad top-level navigation is quarantined; subresource requests are blocked (0.865913ms)
+✔ quarantine metadata rejects executable URLs and credentials and strips all values (0.453502ms)
+✔ MAIN-world popup hook preserves primary click handler and legitimate link windows (71.844796ms)
+✔ quarantine renders only escaped srcdoc with empty sandbox and no remote URL (923.74289ms)
+✔ MAIN-world forged messages without a real click never request quarantine (26.883929ms)
+✔ popup distinguishes evidence and renders advisory output as text, never HTML (819.466526ms)
+✔ options require URL disclosure consent before lookup and offer user blocking only for listed result (176.523613ms)
+✔ worker applies DNR without service; pause removes rules; page cannot change settings (12.879327ms)
+✔ rule failures are visible and never reported as applied (3.885671ms)
+✔ only network debug matches count as Chrome evidence; local identity observation stays separate (24.839957ms)
+✔ untrusted page reports cannot supply a threat verdict or become network evidence (3.199656ms)
+✔ URL identifier protection is installed before a page observation occurs (4.625586ms)
+✔ POST observation installs a scoped follow-up rule; same-host and unknown source cannot create one (9.550183ms)
+✔ learning respects site exceptions and policy changes clear session rules (9.803695ms)
+✔ quarantine opens only a local opaque URL and retains no original path, query or fragment (3.928445ms)
+✔ untrusted reports without a user gesture, non-http targets and paused policy cannot open quarantine (2.62565ms)
+✔ DNR navigation redirect is separate from blocked requests and metadata is tab-scoped (2.793333ms)
+✔ session update failure rolls back dynamic rules and leaves prior settings intact (2.67904ms)
+✔ unsupported identity regex rejects save without silently losing existing protection (3.799351ms)
+✔ worker restart restores session-scoped learned policy without reconstructing identifiers from page data (3.296412ms)
+✔ audit report switches captures, filters findings and renders evidence (1127.635479ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9571.3817

@@ -1,0 +1,218 @@
+{
+  "schema": "dataexodus.guard.v1",
+  "exported_at": "2026-10-26T15:35:08.574096+00:00",
+  "limits": "Controlled loopback browser run; bounded recent events.",
+  "events": [
+    {
+      "kind": "network_rule",
+      "domain": "127.0.0.3",
+      "signals": [
+        "ad_click"
+      ],
+      "resource_type": "navigation",
+      "enforcement": "navigation_quarantined",
+      "evidence_quality": "chrome_rule_match",
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:35:03.547Z"
+    },
+    {
+      "kind": "network_rule",
+      "domain": "127.0.0.3",
+      "signals": [
+        "user_rule"
+      ],
+      "resource_type": "navigation",
+      "enforcement": "navigation_quarantined",
+      "evidence_quality": "chrome_rule_match",
+      "tab_id": 1885561928,
+      "time": "2026-10-26T15:35:01.828Z"
+    },
+    {
+      "kind": "overlay",
+      "domain": "127.0.0.3",
+      "signals": [
+        "transparent_overlay"
+      ],
+      "resource_type": "popup",
+      "enforcement": "interaction_prevented",
+      "evidence_quality": "page_report_unverified",
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:59.997Z"
+    },
+    {
+      "kind": "popup",
+      "domain": "127.0.0.3",
+      "signals": [
+        "popup_without_link"
+      ],
+      "resource_type": "popup",
+      "enforcement": "interaction_prevented",
+      "evidence_quality": "page_report_unverified",
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:58.145Z"
+    },
+    {
+      "kind": "identity_match",
+      "domain": "127.0.0.1",
+      "signals": [
+        "identifier_raw"
+      ],
+      "resource_type": "request",
+      "enforcement": "observed_only",
+      "evidence_quality": "local_identifier_match",
+      "third_party": false,
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:58.010Z"
+    },
+    {
+      "kind": "network_rule",
+      "domain": "127.0.0.5",
+      "signals": [
+        "identifier_raw"
+      ],
+      "resource_type": "request",
+      "enforcement": "network_blocked",
+      "evidence_quality": "chrome_rule_match",
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:57.862Z"
+    },
+    {
+      "kind": "identity_match",
+      "domain": "127.0.0.5",
+      "signals": [
+        "identifier_raw"
+      ],
+      "resource_type": "request",
+      "enforcement": "observed_only",
+      "evidence_quality": "local_identifier_match",
+      "third_party": true,
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:57.861Z"
+    },
+    {
+      "kind": "identity_match",
+      "domain": "127.0.0.5",
+      "signals": [
+        "identifier_raw"
+      ],
+      "resource_type": "request",
+      "enforcement": "observed_only",
+      "evidence_quality": "local_identifier_match",
+      "third_party": true,
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:57.711Z"
+    },
+    {
+      "kind": "network_rule",
+      "domain": "127.0.0.4",
+      "signals": [
+        "identifier_raw"
+      ],
+      "resource_type": "request",
+      "enforcement": "network_blocked",
+      "evidence_quality": "chrome_rule_match",
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:57.564Z"
+    },
+    {
+      "kind": "identity_match",
+      "domain": "127.0.0.4",
+      "signals": [
+        "identifier_raw"
+      ],
+      "resource_type": "request",
+      "enforcement": "observed_only",
+      "evidence_quality": "local_identifier_match",
+      "third_party": true,
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:57.562Z"
+    },
+    {
+      "kind": "network_rule",
+      "domain": "127.0.0.2",
+      "signals": [
+        "identifier_raw"
+      ],
+      "resource_type": "request",
+      "enforcement": "network_blocked",
+      "evidence_quality": "chrome_rule_match",
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:57.413Z"
+    },
+    {
+      "kind": "identity_match",
+      "domain": "127.0.0.2",
+      "signals": [
+        "identifier_raw"
+      ],
+      "resource_type": "request",
+      "enforcement": "observed_only",
+      "evidence_quality": "local_identifier_match",
+      "third_party": true,
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:57.412Z"
+    },
+    {
+      "kind": "network_rule",
+      "domain": "127.0.0.2",
+      "signals": [
+        "identifier_hash"
+      ],
+      "resource_type": "request",
+      "enforcement": "network_blocked",
+      "evidence_quality": "chrome_rule_match",
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:57.280Z"
+    },
+    {
+      "kind": "identity_match",
+      "domain": "127.0.0.2",
+      "signals": [
+        "identifier_hash"
+      ],
+      "resource_type": "request",
+      "enforcement": "observed_only",
+      "evidence_quality": "local_identifier_match",
+      "third_party": true,
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:57.279Z"
+    },
+    {
+      "kind": "network_rule",
+      "domain": "127.0.0.2",
+      "signals": [
+        "identifier_raw"
+      ],
+      "resource_type": "request",
+      "enforcement": "network_blocked",
+      "evidence_quality": "chrome_rule_match",
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:57.136Z"
+    },
+    {
+      "kind": "identity_match",
+      "domain": "127.0.0.2",
+      "signals": [
+        "identifier_raw"
+      ],
+      "resource_type": "request",
+      "enforcement": "observed_only",
+      "evidence_quality": "local_identifier_match",
+      "third_party": true,
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:57.135Z"
+    },
+    {
+      "kind": "network_rule",
+      "domain": "127.0.0.3",
+      "signals": [
+        "user_rule"
+      ],
+      "resource_type": "image",
+      "enforcement": "network_blocked",
+      "evidence_quality": "chrome_rule_match",
+      "tab_id": 1885561925,
+      "time": "2026-10-26T15:34:56.690Z"
+    }
+  ]
+}

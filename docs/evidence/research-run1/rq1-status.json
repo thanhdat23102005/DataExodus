@@ -1,0 +1,35 @@
+{
+  "started": "20261027T1404Z",
+  "sector": "all",
+  "baseline": null,
+  "host": "Lab",
+  "resolvers": [
+    "1.1.1.1",
+    "1.0.0.1"
+  ],
+  "steps": [
+    {
+      "name": "crawl",
+      "returncode": 0,
+      "seconds": 512.7
+    },
+    {
+      "name": "process",
+      "returncode": 0,
+      "seconds": 19.6
+    },
+    {
+      "name": "report",
+      "returncode": 0,
+      "seconds": 0.5
+    },
+    {
+      "name": "audit",
+      "returncode": 0,
+      "seconds": 0.4
+    }
+  ],
+  "ok": true,
+  "sessions": 50,
+  "finished": "20261027T141349Z"
+}

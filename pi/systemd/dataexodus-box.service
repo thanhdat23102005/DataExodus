@@ -1,0 +1,34 @@
+[Unit]
+Description=DataExodus Box dashboard (127.0.0.1:8020, reached through SSH)
+Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI_VI.md
+After=network-online.target dataexodus-firewall.service
+
+[Service]
+User=dataexodus
+Group=dataexodus
+WorkingDirectory=/opt/dataexodus
+EnvironmentFile=/etc/dataexodus/dataexodus.env
+ExecStart=/opt/dataexodus/.venv/bin/python -m uvicorn pi.box:app --host 127.0.0.1 --port 8020 --no-access-log
+Restart=on-failure
+RestartSec=5
+MemoryMax=256M
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadOnlyPaths=/var/lib/dataexodus
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

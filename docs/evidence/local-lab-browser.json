@@ -1,0 +1,11 @@
+{
+  "description": "python -m examples.run_local_lab (real Playwright Chromium, Windows 11, 23 Oct 2026): two loopback sites send a synthetic SHA-256 email hash to a loopback collector; the after phase removes that integration.",
+  "collector_receipts": {
+    "before": 2,
+    "after": 0
+  },
+  "comparison_comparable": true,
+  "findings_not_observed_in_retest": 6,
+  "findings_new": 0,
+  "findings_persisting": 0
+}

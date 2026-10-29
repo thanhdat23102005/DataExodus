@@ -1,0 +1,16 @@
+# DataExodus Box on a Raspberry Pi 5 (Raspberry Pi OS 64-bit): what its services need.
+# Installed by pi/install.sh into /opt/dataexodus/.venv. The experimental ML
+# classifier (scikit-learn) and the InfluxDB/Grafana extras are left out.
+fastapi>=0.104.0
+pydantic>=2.5
+uvicorn>=0.24.0
+requests>=2.31.0
+playwright>=1.40.0
+duckdb>=0.9.0
+pyyaml>=6.0.1
+openpyxl>=3.1.0
+tldextract>=5.0.0
+pyahocorasick>=2.0.0
+geoip2>=4.7.0
+dnslib>=0.9.24
+segno>=1.6.0

@@ -1,0 +1,8 @@
+{
+  "manifest_and_js_syntax": "passed",
+  "python_compilation": "passed",
+  "real_loopback_http_api": "passed",
+  "unauthenticated_request": "401",
+  "analysis_source": "local",
+  "cloud_calls": 0
+}

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+  <!-- Toolbar size: the same disc and shield, drawn on the 16 px grid without the spark. -->
+  <defs>
+    <linearGradient id="disc" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#2EE6A8"/>
+      <stop offset="1" stop-color="#2B8CFF"/>
+    </linearGradient>
+  </defs>
+  <circle cx="8" cy="8" r="8" fill="url(#disc)"/>
+  <path d="M8 2.6 L12.2 4.1 V7.4 C12.2 10.3 10.4 12.3 8 13.4 C5.6 12.3 3.8 10.3 3.8 7.4 V4.1 Z" fill="#fff"/>
+  <path d="M5.9 7.9 L7.4 9.4 L10.2 6.4" fill="none" stroke="#1D8FE0" stroke-width="1.6"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
