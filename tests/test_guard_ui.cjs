@@ -11,6 +11,8 @@ test('popup distinguishes evidence and renders advisory output as text, never HT
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(dom.window.document.getElementById('blocked').textContent,'0');
   assert.equal(dom.window.document.getElementById('observed').textContent,'1');
+  // The in-page stop has its own counter: without it a successful block showed zero everywhere.
+  assert.equal(dom.window.document.getElementById('prevented').textContent,'1');
   assert.match(dom.window.document.getElementById('events').textContent,/unverified/);
   dom.window.document.getElementById('explain').click();await new Promise(resolve=>setImmediate(resolve));
   assert.equal(dom.window.document.querySelector('#advice img'),null);

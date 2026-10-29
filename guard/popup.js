@@ -8,6 +8,10 @@ async function load(){
   $("blocked").textContent=state.events.filter(e=>e.enforcement==="network_blocked").length;
   $("quarantined").textContent=state.events.filter(e=>e.enforcement==="navigation_quarantined").length;
   $("observed").textContent=state.events.filter(e=>e.kind==="identity_match").length;
+  // interaction_prevented is the content script's own stop (a hidden overlay or a
+  // popup with no click behind it). No other counter covers it, so a successful
+  // in-page block used to leave every number on zero.
+  $("prevented").textContent=state.events.filter(e=>e.enforcement==="interaction_prevented").length;
   $("learned").textContent=state.learnedRulesCount || 0;
   $("events").replaceChildren();
   for(const e of state.events.slice(0,12)){
