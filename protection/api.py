@@ -212,17 +212,21 @@ def gemini_advice(payload: AnalysisInput):
 def credential_shape(value: str | None) -> str | None:
     """Name the kind of credential configured, never the credential itself.
 
-    gemini_advice sends it as x-goog-api-key, which accepts an AI Studio API key
-    (AIza...) only. An OAuth access token (ya29... or AQ...) is a different kind
-    of thing: it needs an Authorization: Bearer header and expires within the
-    hour, so it can only ever produce 401 and a silent fall back to the local
-    explanation. Reporting the shape turns that dead end into a readable answer.
+    A hint for /health, not a gate. AI Studio has issued keys as AIza... and,
+    more recently, as AQ...; both are sent as x-goog-api-key and both work, so
+    this list is a record of what has been seen rather than a rule. An OAuth
+    access token (ya29...) really is a different thing - Authorization: Bearer,
+    expires within the hour - and shows up here because /analyze swallows every
+    provider error by design, which otherwise hides the cause.
+
+    Anything unrecognised is reported, never rejected: the only authority on
+    whether a credential works is the provider answering a call with it.
     """
     if not value:
         return None
-    if value.startswith("AIza"):
+    if value.startswith(("AIza", "AQ.")):
         return "api_key"
-    if value.startswith(("ya29.", "AQ.")):
+    if value.startswith("ya29."):
         return "oauth_token_wrong_type"
     return "unrecognised"
 

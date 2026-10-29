@@ -155,9 +155,10 @@ def test_navigation_quarantine_is_accepted_as_handling_not_a_safety_verdict(clie
 @pytest.mark.parametrize("value, shape", [
     (None, None),
     ("", None),
+    # AI Studio issued AIza... first and AQ... later; both are real API keys.
     ("AIzaExampleNotARealKey", "api_key"),
+    ("AQ.ExampleNotARealKey", "api_key"),
     ("ya29.ExampleNotARealToken", "oauth_token_wrong_type"),
-    ("AQ.ExampleNotARealToken", "oauth_token_wrong_type"),
     ("fake-server-key", "unrecognised"),
 ])
 def test_credential_shape_names_the_kind(value, shape):
@@ -166,9 +167,19 @@ def test_credential_shape_names_the_kind(value, shape):
 
 def test_health_names_the_credential_kind_without_echoing_it(client, monkeypatch):
     assert client.get("/health", headers=HEADERS).json()["ai_key_shape"] is None
-    monkeypatch.setenv("GEMINI_API_KEY", "AQ.ExampleNotARealToken")
+    monkeypatch.setenv("GEMINI_API_KEY", "ya29.ExampleNotARealToken")
     body = client.get("/health", headers=HEADERS).json()
     # An OAuth token is reported as the wrong kind rather than silently failing 401.
     assert body["ai_key_shape"] == "oauth_token_wrong_type"
     assert body["ai_configured"] is False  # no model set, so the route stays local
     assert "ExampleNotARealToken" not in json.dumps(body)
+
+
+def test_an_unrecognised_credential_is_reported_not_rejected(client, monkeypatch):
+    """Shape is a hint. Only the provider decides whether a credential works, so
+    a format this code has not seen must not stop the route being configured."""
+    monkeypatch.setenv("GEMINI_API_KEY", "ZZnew-format-from-google")
+    monkeypatch.setenv("GEMINI_MODEL", "test-model")
+    body = client.get("/health", headers=HEADERS).json()
+    assert body["ai_key_shape"] == "unrecognised"
+    assert body["ai_configured"] is True

@@ -83,3 +83,6 @@ Thumbs.db
 /data/*.sqlite-*
 /data/runs/
 /data/study.lock
+
+# Microsoft Office lock files (created while a document is open)
+~$*

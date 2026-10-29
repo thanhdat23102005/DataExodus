@@ -8,15 +8,16 @@
   never in git and never in a chat. The key is read from a hidden prompt, so it
   does not reach your PowerShell history either.
 
-  The script refuses an OAuth access token (ya29... or AQ...). protection/api.py
-  sends the credential as x-goog-api-key, which accepts an AI Studio API key
-  (AIza...) only; an OAuth token needs an Authorization: Bearer header and
-  expires within the hour, so it would only ever produce 401 and a silent fall
-  back to the local explanation.
+  Whether the key works is decided by Google, not by this script: the key is
+  used once against the models endpoint, which both proves it and lists the
+  models the account can actually call, so GEMINI_MODEL is chosen from the
+  account rather than guessed. The script does not reject a key for its shape.
+  AI Studio has issued keys beginning AIza... and, more recently, AQ...; a
+  script that enforced the older prefix would have refused a valid key.
 
-  The key is then used once against the models endpoint. That proves the key
-  works and lists the models the account can actually call, so GEMINI_MODEL is
-  chosen from the account rather than guessed.
+  It does warn about an OAuth access token (ya29...), which is a different kind
+  of credential: it needs an Authorization: Bearer header and expires within the
+  hour, so protection/api.py would get a 401 and fall back silently.
 
   Create a key at https://aistudio.google.com/apikey
 
@@ -37,9 +38,10 @@ $ErrorActionPreference = "Stop"
 
 function Get-Shape([string]$value) {
   # Mirrors credential_shape() in protection/api.py. Keep the two in step.
+  # A hint only - the models call below is what actually decides.
   if ([string]::IsNullOrEmpty($value)) { return $null }
-  if ($value.StartsWith("AIza")) { return "api_key" }
-  if ($value.StartsWith("ya29.") -or $value.StartsWith("AQ.")) { return "oauth_token_wrong_type" }
+  if ($value.StartsWith("AIza") -or $value.StartsWith("AQ.")) { return "api_key" }
+  if ($value.StartsWith("ya29.")) { return "oauth_token_wrong_type" }
   return "unrecognised"
 }
 
@@ -55,20 +57,18 @@ if ($Check) {
   return
 }
 
-$secure = Read-Host "Paste your AI Studio API key (hidden, starts with AIza)" -AsSecureString
+$secure = Read-Host "Paste your AI Studio API key (hidden)" -AsSecureString
 $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
 try { $key = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr) }
 finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr) }
 
-$shape = Get-Shape $key
 if (-not $key) { throw "Nothing pasted." }
-if ($shape -eq "oauth_token_wrong_type") {
-  throw ("That is an OAuth access token, not an API key. It would be sent as " +
-         "x-goog-api-key and rejected, and it expires within the hour. " +
-         "Create a key at https://aistudio.google.com/apikey - it starts with AIza.")
-}
-if ($shape -ne "api_key") {
-  Write-Host "Warning: an AI Studio key normally starts with AIza. Continuing, because Google may change the format." -ForegroundColor Yellow
+if ((Get-Shape $key) -eq "oauth_token_wrong_type") {
+  # Warn, do not refuse: the call below is the real test, and a credential this
+  # script has never seen before is not the same thing as a broken one.
+  Write-Host ("Warning: that looks like an OAuth access token, which needs an " +
+              "Authorization: Bearer header and expires within the hour. " +
+              "Get an API key at https://aistudio.google.com/apikey if the check fails.") -ForegroundColor Yellow
 }
 
 Write-Host "Asking Google which models this key can call..."
@@ -97,6 +97,30 @@ if ($Model) {
     throw "Not one of the listed numbers."
   }
   $Model = $available[$index]
+}
+
+# The listing is not authority either. A key here listed gemini-2.5-flash under
+# generateContent and then answered 404 "no longer available to new users", and
+# another model answered but took 103s against a 15s read timeout in api.py. So
+# call the chosen model once, for real, and time it.
+Write-Host "Calling $Model once to check it answers in time..."
+$body = @{ contents = @(@{ role = "user"; parts = @(@{ text = "hi" }) })
+           generationConfig = @{ maxOutputTokens = 5 } } | ConvertTo-Json -Depth 6
+$started = Get-Date
+try {
+  $null = Invoke-RestMethod -Method Post -TimeoutSec 30 `
+    -Uri "https://generativelanguage.googleapis.com/v1beta/models/$Model`:generateContent" `
+    -Headers @{ "x-goog-api-key" = $key } -ContentType "application/json" -Body $body
+} catch {
+  throw ("$Model is listed but did not answer: $($_.Exception.Message). " +
+         "Run this again and choose another model.")
+}
+$seconds = ((Get-Date) - $started).TotalSeconds
+Write-Host ("  answered in {0:N1}s" -f $seconds)
+if ($seconds -gt 10) {
+  Write-Host ("  Warning: protection/api.py gives the provider a 15 s read timeout, so this " +
+              "model will often time out and fall back to the local explanation. " +
+              "A -lite or -flash model is the better choice here.") -ForegroundColor Yellow
 }
 
 [Environment]::SetEnvironmentVariable("GEMINI_API_KEY", $key, "User")

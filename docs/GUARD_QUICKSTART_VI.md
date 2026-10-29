@@ -114,7 +114,18 @@ Kịch bản acceptance tự bật dịch vụ ở `127.0.0.1:8010` (với SANDB
 
 ## 6. Giải thích bằng Gemini (tuỳ chọn)
 
-Cần **API key của AI Studio** (`AIza...`), lấy ở https://aistudio.google.com/apikey. OAuth access token (`ya29...` hoặc `AQ...`) **không dùng được**: `protection/api.py` gửi credential qua header `x-goog-api-key`, header này chỉ nhận API key; token OAuth cần `Authorization: Bearer` và hết hạn trong khoảng một tiếng, nên chỉ ra 401 rồi âm thầm quay về giải thích cục bộ.
+Cần **API key của AI Studio**, lấy ở https://aistudio.google.com/apikey. AI Studio từng cấp key dạng `AIza...`, hiện cấp dạng `AQ....`; cả hai đều gửi qua header `x-goog-api-key` và đều chạy. OAuth access token (`ya29...`) là thứ khác: nó cần `Authorization: Bearer` và hết hạn trong khoảng một tiếng, nên chỉ ra 401 rồi âm thầm quay về giải thích cục bộ.
+
+**Chọn model không được tin vào danh sách.** Đo ngày 29/10/2026 với một key mới:
+
+| Model | Kết quả thật |
+|---|---|
+| `gemini-2.5-flash` | có trong danh sách `generateContent`, gọi thì **404** — *"no longer available to new users"* |
+| `gemini-3.8-flash` | **503** |
+| `gemini-flash-latest` | 200 nhưng mất **103 giây** — quá lâu, `api.py` chỉ chờ đọc 15 giây |
+| `gemini-3.1-flash-lite` | **200 trong 1,3 giây** ✓ |
+
+Vì vậy script gọi thử model bạn chọn một lần và đo thời gian, thay vì tin vào `supportedGenerationMethods`.
 
 Trên laptop, chạy script cài đặt. Nó hỏi key bằng prompt ẩn (không vào history), từ chối token OAuth, hỏi Google xem key gọi được model nào rồi cho bạn chọn, và lưu vào biến môi trường **user** của Windows — tức là trong profile Windows, không nằm trong thư mục dự án, không có đường vào git:
 
