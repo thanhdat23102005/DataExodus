@@ -169,15 +169,17 @@ The current agent is for a local demonstration. Authentication, encrypted storag
 ## Tests and supporting files
 
 ```bash
-python -m pytest tests/ -q
-node --test tests/test_extension.cjs tests/test_crawler_hooks.cjs
+python -m pytest tests/ -q     # 232 tests
+node --test tests/*.cjs        # 50 tests
 ```
 
-The optional UI DOM test requires jsdom; it is not needed to use the report. See `docs/VALIDATION.md` for the tested environment and limits. `requirements-tested.txt` records tested direct dependency constraints, not a complete platform-independent lockfile.
+Both commands are what CI runs, so they reproduce the figures quoted above. The UI DOM tests need jsdom (`npm install jsdom`); nothing else does. `requirements-tested.txt` pins the dependency versions that were actually tested, which is not the same as a complete platform-independent lockfile.
 
-- `docs/DEVELOPMENT_PLAN_VI.md`: recommended product direction and staged work.
-- `docs/FINAL_PROJECT_GUIDE.md`: demo, validation metrics and assessment evidence.
-- `submission/`: original assessment documents, not regenerated in this continuation.
-- `archive/unverified_legacy_outputs/`: earlier outputs kept for provenance. Their numerical claims are not current verified results.
+- `docs/VALIDATION.md`: what was tested, in which environment, and what each result does not prove.
+- `docs/FINAL_PROJECT_GUIDE.md`: demo walkthrough, validation metrics and assessment evidence.
+- `docs/evidence/`: the recorded runs behind every number in this README.
+- `docs/DEVELOPMENT_PLAN_VI.md`: product direction and staged work.
+- `submission/`: the approved charter, plan and proposal.
+- `archive/unverified_legacy_outputs/`: earlier outputs kept for provenance. Their numbers are not current results.
 
-The old README mentioned MIT, but there is no licence file in the supplied snapshot. Confirm ownership and choose a licence, then review dependency and reference-data terms before external distribution. Commercial readiness and legal compliance have not been established.
+Coursework for TAFE NSW Higher Education. The code here is mine. The reference data is not: EasyPrivacy, URLhaus, DuckDuckGo Tracker Radar and MaxMind GeoLite2 each carry their own licence and attribution terms, and anyone reusing this project needs to read those first.
