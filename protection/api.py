@@ -209,9 +209,28 @@ def gemini_advice(payload: AnalysisInput):
     return {"source": "gemini", "cloud_status": "completed", "advisory_only": True, **result.model_dump()}
 
 
+def credential_shape(value: str | None) -> str | None:
+    """Name the kind of credential configured, never the credential itself.
+
+    gemini_advice sends it as x-goog-api-key, which accepts an AI Studio API key
+    (AIza...) only. An OAuth access token (ya29... or AQ...) is a different kind
+    of thing: it needs an Authorization: Bearer header and expires within the
+    hour, so it can only ever produce 401 and a silent fall back to the local
+    explanation. Reporting the shape turns that dead end into a readable answer.
+    """
+    if not value:
+        return None
+    if value.startswith("AIza"):
+        return "api_key"
+    if value.startswith(("ya29.", "AQ.")):
+        return "oauth_token_wrong_type"
+    return "unrecognised"
+
+
 @app.get("/health", dependencies=[Depends(authenticate)])
 async def health():
     return {"ok": True, "ai_configured": bool(os.getenv("GEMINI_API_KEY") and os.getenv("GEMINI_MODEL")),
+            "ai_key_shape": credential_shape(os.getenv("GEMINI_API_KEY")),
             "reputation_configured": bool(os.getenv("WEBRISK_API_KEY")), "version": "0.5.0",
             "sandbox_host": sandbox.host_label(), "safe_browse_sessions": len(sandbox._browse)}
 

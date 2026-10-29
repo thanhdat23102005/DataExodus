@@ -150,3 +150,25 @@ def test_navigation_quarantine_is_accepted_as_handling_not_a_safety_verdict(clie
     assert result["source"] == "local"
     assert result["advisory_only"] is True
     assert "safety_verdict" not in result
+
+
+@pytest.mark.parametrize("value, shape", [
+    (None, None),
+    ("", None),
+    ("AIzaExampleNotARealKey", "api_key"),
+    ("ya29.ExampleNotARealToken", "oauth_token_wrong_type"),
+    ("AQ.ExampleNotARealToken", "oauth_token_wrong_type"),
+    ("fake-server-key", "unrecognised"),
+])
+def test_credential_shape_names_the_kind(value, shape):
+    assert api.credential_shape(value) == shape
+
+
+def test_health_names_the_credential_kind_without_echoing_it(client, monkeypatch):
+    assert client.get("/health", headers=HEADERS).json()["ai_key_shape"] is None
+    monkeypatch.setenv("GEMINI_API_KEY", "AQ.ExampleNotARealToken")
+    body = client.get("/health", headers=HEADERS).json()
+    # An OAuth token is reported as the wrong kind rather than silently failing 401.
+    assert body["ai_key_shape"] == "oauth_token_wrong_type"
+    assert body["ai_configured"] is False  # no model set, so the route stays local
+    assert "ExampleNotARealToken" not in json.dumps(body)

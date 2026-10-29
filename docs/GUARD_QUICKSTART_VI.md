@@ -114,12 +114,23 @@ Kịch bản acceptance tự bật dịch vụ ở `127.0.0.1:8010` (với SANDB
 
 ## 6. Giải thích bằng Gemini (tuỳ chọn)
 
-Dừng dịch vụ, đặt biến môi trường **trên máy chạy dịch vụ** (laptop hoặc file `/etc/dataexodus/dataexodus.env` trên Pi), rồi chạy lại:
+Cần **API key của AI Studio** (`AIza...`), lấy ở https://aistudio.google.com/apikey. OAuth access token (`ya29...` hoặc `AQ...`) **không dùng được**: `protection/api.py` gửi credential qua header `x-goog-api-key`, header này chỉ nhận API key; token OAuth cần `Authorization: Bearer` và hết hạn trong khoảng một tiếng, nên chỉ ra 401 rồi âm thầm quay về giải thích cục bộ.
+
+Trên laptop, chạy script cài đặt. Nó hỏi key bằng prompt ẩn (không vào history), từ chối token OAuth, hỏi Google xem key gọi được model nào rồi cho bạn chọn, và lưu vào biến môi trường **user** của Windows — tức là trong profile Windows, không nằm trong thư mục dự án, không có đường vào git:
 
 ```powershell
-$env:GEMINI_API_KEY = "KEY_CUA_BAN_TREN_MAY_BAN"
-$env:GEMINI_MODEL = "MODEL_ID_CO_TRONG_TAI_KHOAN_AI_STUDIO"
+powershell -ExecutionPolicy Bypass -File protection\setup-ai.ps1
 ```
+
+Biến kiểu user chỉ áp dụng cho tiến trình mới, nên **mở terminal mới** rồi chạy lại dịch vụ. Kiểm tra:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File protection\setup-ai.ps1 -Check
+```
+
+Trên Pi thì đặt trong `/etc/dataexodus/dataexodus.env` (`GEMINI_API_KEY`, `GEMINI_MODEL`) rồi `sudo systemctl restart dataexodus-guard`.
+
+`/health` báo `ai_configured` và `ai_key_shape` (`api_key`, `oauth_token_wrong_type`, hoặc `unrecognised`) — chỉ loại credential, không bao giờ in giá trị. Đặt sai loại thì thấy ngay ở đó thay vì phải đoán qua một lỗi 401 bị che.
 
 Trong Settings, bật **Send only selected signal types…**, lưu, rồi bấm **Explain evidence**. Gemini chỉ nhận loại tín hiệu và nhãn xử lý, ví dụ:
 
