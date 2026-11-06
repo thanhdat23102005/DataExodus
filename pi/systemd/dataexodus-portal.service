@@ -1,6 +1,6 @@
 [Unit]
 Description=DataExodus Box captive portal (hotspot devices only, http://10.42.0.1)
-Documentation=file:///opt/dataexodus/docs/HOTSPOT_VI.md
+Documentation=file:///opt/dataexodus/docs/HOTSPOT.md
 After=NetworkManager.service dataexodus-guard.service dataexodus-dnswatch.service
 Wants=dataexodus-guard.service dataexodus-dnswatch.service
 # The hotspot address appears only once the access point is up: keep retrying.

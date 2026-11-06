@@ -1,6 +1,6 @@
 [Unit]
 Description=DataExodus sample links for the link checker (127.0.0.48/28, loopback only, fictional sites)
-Documentation=file:///opt/dataexodus/docs/HOTSPOT_VI.md
+Documentation=file:///opt/dataexodus/docs/HOTSPOT.md
 After=network.target
 
 [Service]

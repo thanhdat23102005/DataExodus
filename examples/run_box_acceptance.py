@@ -13,7 +13,7 @@ the sandbox (the sample collector counts the post); the DNS watch logs only
 after opting in, blocks per device and answers captive names with the portal;
 "Forget this device" deletes the device's lookups; cross-site posts and foreign
 Host headers are refused. Not covered: the Wi-Fi radio, NetworkManager and the
-Pi's firewall, which need the Pi itself (docs/HOTSPOT_VI.md has the checks).
+Pi's firewall, which need the Pi itself (docs/HOTSPOT.md has the checks).
 
   python -m examples.run_box_acceptance --out docs/evidence/box-v05
 """

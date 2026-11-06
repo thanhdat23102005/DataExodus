@@ -1,6 +1,6 @@
 [Unit]
 Description=DataExodus DNS watch (answers only the client networks in DNSWATCH_ALLOW)
-Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI_VI.md
+Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI.md
 After=network-online.target dataexodus-firewall.service
 Wants=network-online.target
 

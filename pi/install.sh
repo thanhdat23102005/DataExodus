@@ -5,7 +5,7 @@
 #
 # Safe to run again after copying a newer project version: the settings file,
 # the Guard token, reference lists, DNS log and study runs are kept.
-# What it sets up (details: docs/RASPBERRY_PI_VI.md, docs/HOTSPOT_VI.md):
+# What it sets up (details: docs/RASPBERRY_PI.md, docs/HOTSPOT.md):
 #   dataexodus-guard    link checker, Safe Browse and Guard service, 127.0.0.1:8010
 #   dataexodus-box      dashboard and printable Wi-Fi card, 127.0.0.1:8020
 #   dataexodus-dnswatch DNS watch on port 53 for the networks you allow

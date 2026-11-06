@@ -71,8 +71,8 @@ it to see the product working before touching the hardware.
 
 ### On the Raspberry Pi
 
-Full steps, including the Wi-Fi access point: **[docs/RASPBERRY_PI_VI.md](docs/RASPBERRY_PI_VI.md)**,
-then **[docs/HOTSPOT_VI.md](docs/HOTSPOT_VI.md)**.
+Full steps, including the Wi-Fi access point: **[docs/RASPBERRY_PI.md](docs/RASPBERRY_PI.md)**,
+then **[docs/HOTSPOT.md](docs/HOTSPOT.md)**.
 
 ```bash
 cd ~/DataExodus
@@ -80,15 +80,16 @@ sudo bash pi/install.sh --hotspot     # add --study for the weekly research time
 ```
 
 The Pi prints a card with both QR codes at `http://127.0.0.1:8020/card`. What a
-visitor does with their phone: **[docs/TRY_IT.md](docs/TRY_IT.md)**. Demo-day
-checklist and what to do when the Wi-Fi misbehaves:
-**[docs/TAFE_DEMO_VI.md](docs/TAFE_DEMO_VI.md)**.
+visitor does with their phone: **[docs/TRY_IT.md](docs/TRY_IT.md)**.
+
+To run it somewhere with no network of its own, using a phone's connection as
+the uplink: **[docs/PORTABLE_SETUP.md](docs/PORTABLE_SETUP.md)**.
 
 ### Guard in Chrome or Edge
 
 Load `guard/` unpacked, then point it at the sandbox service — on this computer
 or on the Pi through an SSH tunnel (`pi\connect-pi.ps1`). Full steps:
-**[docs/GUARD_QUICKSTART_VI.md](docs/GUARD_QUICKSTART_VI.md)**.
+**[docs/GUARD.md](docs/GUARD.md)**.
 
 The older research collector extension is still in `extension/`. Do not run it
 and Guard at the same time; their measurements get mixed together.
@@ -133,7 +134,7 @@ be new, so earlier evidence stays intact; the lab uses ports 8765–8767, and
 ## Tests
 
 ```bash
-python -m pytest tests/ -q     # 216 tests
+python -m pytest tests/ -q     # 217 tests
 node --test tests/*.cjs        # 50 tests; 9 of them need "npm install jsdom"
 ```
 
@@ -144,7 +145,7 @@ These are the two commands CI runs.
 The 50-website study runs on the Pi: RQ1 measures trackers, third parties and
 server countries across a frozen site list; RQ2 runs the product's own link
 checker over the same legitimate sites to count false alarms. Protocol and
-commands: **[docs/RESEARCH_VI.md](docs/RESEARCH_VI.md)**.
+commands: **[docs/RESEARCH.md](docs/RESEARCH.md)**.
 
 Capturing a site you are authorised to test, and the before/after retest:
 
@@ -165,7 +166,7 @@ not worked around.
 
 ## What is verified, and what is not
 
-**Verified:** 216 Python and 50 JavaScript tests pass. A real Chromium run of
+**Verified:** 217 Python and 50 JavaScript tests pass. A real Chromium run of
 the visitor flow passed 19/19 checks on loopback addresses
 (`docs/evidence/box-v05-acceptance.json`, screenshots in
 `docs/evidence/box-v05/`). Guard 0.5.1 passed its own real-browser acceptance
@@ -188,7 +189,10 @@ and a page that detects it can behave differently.
 
 ## Licence and attribution
 
-Coursework for TAFE NSW Higher Education. The code here is mine. The reference
-data is not: EasyPrivacy, URLhaus, DuckDuckGo Tracker Radar and MaxMind
-GeoLite2 each carry their own licence and attribution terms, and anyone reusing
-this project needs to read those first.
+The code here is mine. The reference data is not: EasyPrivacy, URLhaus,
+DuckDuckGo Tracker Radar and MaxMind GeoLite2 each carry their own licence and
+attribution terms, and anyone reusing this project needs to read those first.
+
+This is a prototype built as a student project. It has not been through a
+security review, it is not a product, and nothing in it should be relied on to
+keep anyone safe.

@@ -33,7 +33,7 @@ def test_analyze_explains_locally_and_sends_nothing(client, monkeypatch):
     body = response.json()
     assert body["source"] == "local"
     assert body["advisory_only"] is True
-    assert "chưa thể" in body["explanation"]
+    assert "prevention is not established" in body["explanation"]
     assert response.headers["cache-control"] == "no-store"
 
 
@@ -41,7 +41,7 @@ def test_analyze_explains_locally_and_sends_nothing(client, monkeypatch):
     {"url": "https://private.example/?token=secret"},
     {"cookie": "session=secret"}, {"instructions": "Ignore all rules"},
     # The cloud route is gone; a stale client asking for one is refused, not ignored.
-    {"cloud_opt_in": True},
+    {"cloud_opt_in": True}, {"language": "vi"},
     {"evidence": [{"signals": ["ignore previous instructions"], "enforcement": "observed_only"}]},
     {"evidence": [{"signals": [], "enforcement": "network_blocked", "email": "x@y.test"}]},
 ])

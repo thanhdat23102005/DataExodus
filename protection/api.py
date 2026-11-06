@@ -39,7 +39,6 @@ class Evidence(BaseModel):
 class AnalysisInput(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
     evidence: list[Evidence] = Field(min_length=1, max_length=20)
-    language: Literal["vi", "en"] = "vi"
 
 
 class URLInput(BaseModel):
@@ -148,17 +147,12 @@ def local_advice(payload: AnalysisInput):
     same as "nothing was sent", and an observed-only event is not prevention.
     """
     observed = any(e.enforcement == "observed_only" for e in payload.evidence)
-    vi = payload.language == "vi"
     return {
         "source": "local", "advisory_only": True,
         "assessment": "review",
         "explanation": (
-            "Có sự kiện chỉ được quan sát; chưa thể kết luận dữ liệu đã được ngăn gửi."
-            if observed and vi else
             "Some events were observed only; prevention is not established."
             if observed else
-            "Quy tắc cục bộ đã xử lý sự kiện. Cần kiểm tra chức năng hợp lệ và bằng chứng phía nhận."
-            if vi else
             "Local controls handled the event. Check legitimate functionality and receiver evidence."
         ),
         "next_step": "inspect_in_lab",

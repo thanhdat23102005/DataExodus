@@ -1,6 +1,6 @@
 [Unit]
 Description=DataExodus: keep the sandbox and crawler account off the local network (nftables)
-Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI_VI.md
+Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI.md
 Before=network-pre.target dataexodus-guard.service dataexodus-study.service
 Wants=network-pre.target
 

@@ -1,6 +1,6 @@
 [Unit]
 Description=DataExodus Box dashboard (127.0.0.1:8020, reached through SSH)
-Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI_VI.md
+Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI.md
 After=network-online.target dataexodus-firewall.service
 
 [Service]

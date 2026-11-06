@@ -1,6 +1,6 @@
 [Unit]
 Description=DataExodus Guard service and isolated sandbox browser (127.0.0.1:8010, reached through SSH)
-Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI_VI.md
+Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI.md
 After=network-online.target dataexodus-firewall.service
 Wants=network-online.target
 # Never open untrusted pages without the egress firewall in place.

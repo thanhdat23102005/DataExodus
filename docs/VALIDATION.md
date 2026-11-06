@@ -4,7 +4,7 @@ This file records what was actually tested, on which machine, and what each
 result does not prove. Newest section first; older sections are kept so the
 numbers quoted in earlier write-ups can still be traced.
 
-## Repository trimmed to the product — 6 November 2026
+## Repository trimmed, and moved to English — 6 November 2026
 
 The optional cloud explanation route (Google Gemini) and the experimental
 scikit-learn tracker classifier were removed. Neither was ever run with real
@@ -14,9 +14,16 @@ added a dependency and an outbound path the product does not need. Guard's
 tested path always did. Sections below that mention Gemini describe code that
 is no longer in the repository.
 
+The five Vietnamese guides were rewritten in English and renamed
+(`*_VI.md` is gone), and the advisory API dropped its `language` field: the
+visitor portal was already English-only, so a Vietnamese Guard explanation was
+an inconsistency rather than a feature. The removed field is refused rather
+than ignored, so a stale client fails loudly instead of silently losing its
+request.
+
 | Check | Outcome | Evidence |
 | --- | --- | --- |
-| Full Python suite after the removal | **216 passed** | `python -m pytest tests/ -q` |
+| Full Python suite after the removal | **217 passed** | `python -m pytest tests/ -q` |
 | Full JavaScript suite after the removal | **50 tests, 0 failed** (9 skipped without `jsdom`) | `node --test tests/*.cjs` |
 | `/analyze` makes no outbound call | Asserted, not assumed: the test fails the run if anything POSTs during the request | `tests/test_guard_api.py::test_analyze_explains_locally_and_sends_nothing` |
 | `/health` no longer advertises AI configuration | No `ai_*` key in the response | `tests/test_guard_api.py::test_health_reports_no_ai_configuration` |
@@ -68,7 +75,7 @@ Found by the real-browser runs and fixed in this release: the portal's `Referrer
 
 **Research run 1 on the Pi (28 October 2026):** the 50-site study completed (50 sessions, 8.5 minutes, resolver 1.1.1.1 recorded): 34 full captures, 2 partial, 14 failed, mostly bot-protection responses, which were not bypassed. The link checker on the same 50 legitimate sites rated none Dangerous (28 low, 21 careful; 31/18 after the scam-wording refinement found by this run). Details: `docs/evidence/research-run1/README.md`.
 
-**Not verified yet:** the Wi-Fi access point, NetworkManager's DHCP and the portal on 10.42.0.1 (the Pi had no Ethernet uplink yet), and captive-portal pop-ups on real iPhone and Android phones (`docs/HOTSPOT_VI.md` section 3 lists the checks to run). No precision/recall of the score on a labelled set of real phishing links; live Web Risk calls.
+**Not verified yet:** the Wi-Fi access point, NetworkManager's DHCP and the portal on 10.42.0.1 (the Pi had no Ethernet uplink yet), and captive-portal pop-ups on real iPhone and Android phones (`docs/HOTSPOT.md` section 3 lists the checks to run). No precision/recall of the score on a labelled set of real phishing links; live Web Risk calls.
 
 ## DataExodus Final (Guard 0.4 + Raspberry Pi box) — 23 October 2026
 

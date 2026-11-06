@@ -1,6 +1,6 @@
 [Unit]
 Description=DataExodus scheduled study run (crawl the frozen site list, process, report, audit)
-Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI_VI.md
+Documentation=file:///opt/dataexodus/docs/RASPBERRY_PI.md
 After=network-online.target dataexodus-firewall.service
 Wants=network-online.target
 Requires=dataexodus-firewall.service
