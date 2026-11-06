@@ -24,7 +24,10 @@
 # my two devices resolved it.
 #
 # None of these are on any of the four reference lists
-# (EasyPrivacy 57,167 / URLhaus 1,832 / Tracker Radar / hand-picked 88).
+# Counts are domains the DNS watch actually loads, not lines in the file:
+# EasyPrivacy 43,329 (of 57,167 lines - the rest are path rules DNS cannot see),
+# URLhaus 1,808, hand-picked 88. Tracker Radar is not loaded for blocking at
+# all: it labels owners in the research pipeline. Measured 30 October 2026.
 #
 # I block at the apex, not the hostname, because these are disposable hosts: the
 # first one I found used the random label pl29809298, and it changes per visit.
