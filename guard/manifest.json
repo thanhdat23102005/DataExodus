@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "DataExodus Guard",
   "version": "0.5.1",
-  "description": "Blocks identifier collection, quarantines ad clicks with an isolated sandbox preview, X-Ray view and private optional AI explanations.",
+  "description": "Blocks identifier collection, quarantines ad clicks with an isolated sandbox preview, and an X-Ray view of what a page reads.",
   "minimum_chrome_version": "120",
   "permissions": ["storage", "declarativeNetRequest", "declarativeNetRequestFeedback", "webRequest", "webNavigation"],
   "host_permissions": ["http://*/*", "https://*/*"],

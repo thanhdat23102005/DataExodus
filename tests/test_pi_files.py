@@ -142,7 +142,7 @@ def test_settings_template_has_placeholders_and_no_secrets():
     text = (PI / "dataexodus.env.example").read_text(encoding="utf-8")
     for placeholder in ("__TOKEN__", "__CHROMIUM__", "__ALLOW__", "__HOST__"):
         assert placeholder in text
-    for key in ("GEMINI_API_KEY", "WEBRISK_API_KEY", "HOTSPOT_PSK"):
+    for key in ("WEBRISK_API_KEY", "HOTSPOT_PSK"):
         assert re.search(rf"^#{key}=$", text, re.M), key
     assert "DATAEXODUS_CHROMIUM_SANDBOX=1" in text and "DNSWATCH_MODE=observe" in text
     assert "DNSWATCH_UPSTREAM=auto" in text and "SANDBOX_BROWSE_SESSIONS=1" in text

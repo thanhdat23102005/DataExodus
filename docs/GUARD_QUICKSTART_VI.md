@@ -1,8 +1,8 @@
 # DataExodus Guard 0.5: hướng dẫn chạy
 
-Cập nhật 27/10/2026 (giờ Sydney). Guard **0.5.0** = bản 0.4 (gộp từ hai bản Guard 0.3, cộng X-Ray và sandbox trên Raspberry Pi), thêm **điểm rủi ro 0–100 kèm lý do** ngay trong kết quả *Preview in isolated sandbox*. Kết quả "Dangerous" sẽ không có nút mở link sạch một chạm. Chi tiết: `CHANGES_FINAL.md`. Trọng tâm demo của bản 0.5 là Wi‑Fi cho thầy thử bằng điện thoại: xem `docs/HOTSPOT_VI.md`.
+Cập nhật 27/10/2026 (giờ Sydney). Guard **0.5.0** = bản 0.4 (gộp từ hai bản Guard 0.3, cộng X-Ray và sandbox trên Raspberry Pi), thêm **điểm rủi ro 0–100 kèm lý do** ngay trong kết quả *Preview in isolated sandbox*. Kết quả "Dangerous" sẽ không có nút mở link sạch một chạm. Chi tiết: `docs/VALIDATION.md`. Trọng tâm demo của bản 0.5 là Wi‑Fi cho thầy thử bằng điện thoại: xem `docs/HOTSPOT_VI.md`.
 
-**Đã kiểm chứng trên Chromium thật (bản 156):** extension được nạp unpacked và điều khiển phòng lab qua 2 giai đoạn (baseline và protected). Mọi con số đều lấy từ **phía nhận** của lab, không giả lập chặn. Kết quả ở `docs/evidence/guard-v05-browser-acceptance.json` (bản 0.4 trước đó: `guard-v04-browser-acceptance.json`). Gemini và Web Risk mới chỉ được test bằng phản hồi giả lập, chưa gọi bằng key thật. Phần Raspberry Pi xem `docs/RASPBERRY_PI_VI.md`.
+**Đã kiểm chứng trên Chromium thật (bản 156):** extension được nạp unpacked và điều khiển phòng lab qua 2 giai đoạn (baseline và protected). Mọi con số đều lấy từ **phía nhận** của lab, không giả lập chặn. Kết quả ở `docs/evidence/guard-v05-browser-acceptance.json` (bản 0.4 trước đó: `guard-v04-browser-acceptance.json`). Web Risk mới chỉ được test bằng phản hồi giả lập, chưa gọi bằng key thật. Phần Raspberry Pi xem `docs/RASPBERRY_PI_VI.md`.
 
 ## Guard làm gì
 
@@ -33,7 +33,7 @@ URL đầy đủ được giữ trong `chrome.storage.session`: chỉ nằm tron
 Mở PowerShell tại thư mục dự án:
 
 ```powershell
-cd E:\claude\DataExodus_Final
+cd C:\DataExodus
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt -c requirements-tested.txt
@@ -42,13 +42,13 @@ python -m playwright install chromium
 python setup_data.py                # EasyPrivacy, Tracker Radar, URLhaus; thêm --geoip-key/--geoip-account cho GeoLite2
 ```
 
-Nếu đã tải dữ liệu ở bản cũ, có thể chép `E:\claude\DataExodus\data\blocklists` sang `data\blocklists`. Nếu PowerShell không cho chạy `Activate.ps1`, gọi thẳng `.venv\Scripts\python.exe`.
+Nếu đã tải dữ liệu ở lần trước, chép thẳng thư mục `data\blocklists` cũ sang đây là xong, không cần tải lại. Nếu PowerShell không cho chạy `Activate.ps1`, gọi thẳng `.venv\Scripts\python.exe`.
 
 ## 2. Nạp Guard vào Chrome hoặc Edge
 
 1. Mở `chrome://extensions` (hoặc `edge://extensions`), bật **Developer mode**.
 2. **Gỡ hoặc tắt** các bản cũ: DataExodus Guard 0.3, GhostShield, và extension nghiên cứu `extension/`. Nếu chạy nhiều bản cùng lúc, kết quả đo sẽ lẫn vào nhau.
-3. **Load unpacked**, chọn thư mục `E:\claude\DataExodus_Final\guard`.
+3. **Load unpacked**, chọn thư mục `C:\DataExodus\guard`.
 4. Ghim DataExodus Guard lên thanh công cụ, rồi mở **Settings**.
 5. Điền **Protected email** là `student.demo@example.com` (email thử, đừng dùng email thật khi demo). Bật **Pre-block…**, **After a local identity observation…**, **Route ad clicks…**, rồi bấm **Save and apply rules**.
 
@@ -59,18 +59,18 @@ Nếu đã tải dữ liệu ở bản cũ, có thể chép `E:\claude\DataExodu
 **Cách B: ngay trên laptop** (luôn chạy từ thư mục dự án, nếu không sẽ gặp lỗi `No module named 'protection'`):
 
 ```powershell
-cd E:\claude\DataExodus_Final
+cd C:\DataExodus
 $env:DATAEXODUS_GUARD_TOKEN = python -c "import secrets; print(secrets.token_urlsafe(32))"
 $env:DATAEXODUS_GUARD_TOKEN | Set-Clipboard
 python -m uvicorn protection.api:app --host 127.0.0.1 --port 8010 --no-access-log
 ```
 
-Dán token vào **Local service token** trong Settings rồi lưu. Token này chỉ bảo vệ API trên máy, **không** phải key Gemini. Không gửi token hay key vào chat, và không đẩy lên GitHub.
+Dán token vào **Local service token** trong Settings rồi lưu. Token này chỉ bảo vệ API chạy trên máy. Đừng đẩy nó lên GitHub.
 
 ## 4. Demo trong phòng lab
 
 ```powershell
-cd E:\claude\DataExodus_Final
+cd C:\DataExodus
 python -m examples.guard_lab
 ```
 
@@ -79,7 +79,7 @@ Mở `http://127.0.0.1:8875`. Lab gồm 6 máy chủ loopback, mỗi máy một 
 Muốn **xem trước quảng cáo của lab** trong sandbox, chạy dịch vụ trên laptop (cách B) với biến chỉ dành cho lab:
 
 ```powershell
-cd E:\claude\DataExodus_Final
+cd C:\DataExodus
 $env:SANDBOX_ALLOW_HOSTS = "127.0.0.3,127.0.0.6"   # CHỈ dùng trong lab
 python -m uvicorn protection.api:app --host 127.0.0.1 --port 8010 --no-access-log
 ```
@@ -112,50 +112,11 @@ python -m examples.run_guard_acceptance --out reports/guard-browser-run2 --heade
 
 Kịch bản acceptance tự bật dịch vụ ở `127.0.0.1:8010` (với SANDBOX_ALLOW_HOSTS cho lab) nếu cổng đó đang trống. Nếu tunnel tới Pi đang mở, cổng bị chiếm: kịch bản bỏ qua phần preview và đi đường *Open advertiser page directly*. Mỗi lần chạy cần một thư mục output mới.
 
-## 6. Giải thích bằng Gemini (tuỳ chọn)
-
-Cần **API key của AI Studio**, lấy ở https://aistudio.google.com/apikey. AI Studio từng cấp key dạng `AIza...`, hiện cấp dạng `AQ....`; cả hai đều gửi qua header `x-goog-api-key` và đều chạy. OAuth access token (`ya29...`) là thứ khác: nó cần `Authorization: Bearer` và hết hạn trong khoảng một tiếng, nên chỉ ra 401 rồi âm thầm quay về giải thích cục bộ.
-
-**Chọn model không được tin vào danh sách.** Đo ngày 29/10/2026 với một key mới:
-
-| Model | Kết quả thật |
-|---|---|
-| `gemini-2.5-flash` | có trong danh sách `generateContent`, gọi thì **404** — *"no longer available to new users"* |
-| `gemini-3.8-flash` | **503** |
-| `gemini-flash-latest` | 200 nhưng mất **103 giây** — quá lâu, `api.py` chỉ chờ đọc 15 giây |
-| `gemini-3.1-flash-lite` | **200 trong 1,3 giây** ✓ |
-
-Vì vậy script gọi thử model bạn chọn một lần và đo thời gian, thay vì tin vào `supportedGenerationMethods`.
-
-Trên laptop, chạy script cài đặt. Nó hỏi key bằng prompt ẩn (không vào history), từ chối token OAuth, hỏi Google xem key gọi được model nào rồi cho bạn chọn, và lưu vào biến môi trường **user** của Windows — tức là trong profile Windows, không nằm trong thư mục dự án, không có đường vào git:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File protection\setup-ai.ps1
-```
-
-Biến kiểu user chỉ áp dụng cho tiến trình mới, nên **mở terminal mới** rồi chạy lại dịch vụ. Kiểm tra:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File protection\setup-ai.ps1 -Check
-```
-
-Trên Pi thì đặt trong `/etc/dataexodus/dataexodus.env` (`GEMINI_API_KEY`, `GEMINI_MODEL`) rồi `sudo systemctl restart dataexodus-guard`.
-
-`/health` báo `ai_configured` và `ai_key_shape` (`api_key`, `oauth_token_wrong_type`, hoặc `unrecognised`) — chỉ loại credential, không bao giờ in giá trị. Đặt sai loại thì thấy ngay ở đó thay vì phải đoán qua một lỗi 401 bị che.
-
-Trong Settings, bật **Send only selected signal types…**, lưu, rồi bấm **Explain evidence**. Gemini chỉ nhận loại tín hiệu và nhãn xử lý, ví dụ:
-
-```json
-{"evidence": [{"signals": ["identifier_hash"], "resource_type": "request", "enforcement": "observed_only", "third_party": true}], "language": "vi"}
-```
-
-Gemini không nhận URL, domain, email, hash, cookie, body hay HTML. AI chỉ giải thích; nó **không** thay đổi được quy tắc chặn. Nếu thiếu cấu hình hoặc output sai schema, dịch vụ trả về phần giải thích cục bộ. Giới hạn mặc định là 6 lượt gọi/phút và 100 lượt/ngày (`GUARD_CALLS_PER_MINUTE`, `GUARD_CALLS_PER_DAY`).
-
-## 7. Kiểm tra một URL (Web Risk) và chặn thủ công
+## 6. Kiểm tra một URL (Web Risk) và chặn thủ công
 
 Đặt `WEBRISK_API_KEY` ở dịch vụ. Trong Settings, nhập URL, xác nhận đồng ý gửi URL sang Google, rồi bấm **Check URL**. Nếu kết quả là `listed`, bạn có thể chọn **Block destination domain**. `not_listed` **không** có nghĩa là an toàn. Safe Browsing chỉ dành cho mục đích phi thương mại; dùng thương mại thì cần Web Risk.
 
-## 8. Dùng chung danh sách với audit, và báo cáo evidence
+## 7. Dùng chung danh sách với audit, và báo cáo evidence
 
 ```powershell
 python -m protection.export_rules --out reports/guard-domains.json            # Settings → Import a reviewed audit domain export
@@ -164,16 +125,15 @@ python -m analysis.guard_report --events "C:\path\DataExodus_Guard_Evidence.json
 
 Báo cáo tách riêng 3 loại: *Chrome rule matches* (chặn mạng và điều hướng vào Quarantine), *page reports* chưa xác minh, và *observations*. Không cộng các con số này để ra "tỉ lệ chặn".
 
-## 9. Đánh giá đóng góp của từng lớp
+## 8. Đánh giá đóng góp của từng lớp
 
 | Phiên bản | Đo cái gì |
 | --- | --- |
 | A: chỉ quy tắc domain | Request thật sự bị ngăn, chặn nhầm, ảnh hưởng chức năng |
 | B: A + quy tắc định danh + quy tắc học | Định danh tới collector **chưa biết**; lần POST thứ hai |
 | C: B + Quarantine/sandbox | Số cú nhấp quảng cáo mà mạng quảng cáo không ghi nhận được; số click-ID không tới nhà quảng cáo |
-| D: C + Gemini | Phần giải thích có bám bằng chứng không; người đọc có hiểu đúng không. D **không** làm thay đổi tỉ lệ chặn |
 
-## 10. Giới hạn cần nói khi bảo vệ
+## 9. Giới hạn cần nói khi bảo vệ
 
 - Guard bảo vệ trong phạm vi extension trình duyệt; nó không diệt mã độc đã chạy trên hệ điều hành.
 - DNR không đọc body: lần POST đầu đi ra được, và quy tắc học chỉ áp dụng cho các lần sau.

@@ -3,7 +3,7 @@ const $=id=>document.getElementById(id);
 async function send(type,extra={}){const r=await chrome.runtime.sendMessage({type,...extra});if(!r.ok)throw new Error(r.error);return r.data;}
 async function load(){
   state=await send("state");
-  $("mode").textContent=state.startupError || `${state.settings.enabled?"Protection on":"Protection paused"} · ${state.settings.cloudOptIn?"Cloud explanations enabled":"Local explanations only"}${state.settings.labMode?" · LAB MODE":""}`;
+  $("mode").textContent=state.startupError || `${state.settings.enabled?"Protection on":"Protection paused"}${state.settings.labMode?" · LAB MODE":""}`;
   $("toggle").textContent=state.settings.enabled?"Pause protection":"Resume protection";
   $("blocked").textContent=state.events.filter(e=>e.enforcement==="network_blocked").length;
   $("quarantined").textContent=state.events.filter(e=>e.enforcement==="navigation_quarantined").length;
@@ -36,7 +36,7 @@ $("xray").onclick=()=>action(async()=>{
 });
 $("explain").onclick=()=>action(async()=>{
   $("explain").disabled=true;
-  try{const a=await send("analyze");$("advice").hidden=false;$("advice").textContent=`${a.source} · ${a.cloud_status}\n${a.explanation}\nNext: ${a.next_step}\nAdvisory only; no protection settings changed.`;}
+  try{const a=await send("analyze");$("advice").hidden=false;$("advice").textContent=`${a.explanation}\nNext: ${a.next_step}\nAdvisory only; no protection settings changed.`;}
   finally{$("explain").disabled=false;}
 });
 $("export").onclick=()=>action(async()=>{

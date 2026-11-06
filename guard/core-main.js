@@ -8,7 +8,7 @@
   const STARTER = ["doubleclick.net", "googlesyndication.com", "googleadservices.com"];
   const DEFAULTS = {enabled:true, popupGuard:true, labMode:false, preventCollection:true, learnCollection:true,
     quarantineAds:true, blockedDomains:STARTER,
-    allowSites:[], testEmail:"", apiToken:"", cloudOptIn:false};
+    allowSites:[], testEmail:"", apiToken:""};
   const LAB = [{domain:"127.0.0.2",category:"lab_collector"},{domain:"127.0.0.3",category:"lab_popup"}];
   // Ad-click redirectors: a top-level navigation matching one of these is a
   // click on an ad, routed to quarantine before the ad network is contacted.
@@ -52,7 +52,7 @@
       enabled:raw.enabled !== false, popupGuard:raw.popupGuard !== false,
       preventCollection:raw.preventCollection !== false, learnCollection:raw.learnCollection !== false,
       quarantineAds:raw.quarantineAds !== false,
-      labMode:raw.labMode === true, cloudOptIn:raw.cloudOptIn === true,
+      labMode:raw.labMode === true,
       blockedDomains:normalize(raw.blockedDomains ?? STARTER), allowSites:normalize(raw.allowSites),
       testEmail:String(raw.testEmail || "").trim().slice(0,254), apiToken:String(raw.apiToken || "").slice(0,200)};
   }
@@ -235,7 +235,7 @@
     }
     return tokens;
   }
-  function aiEvidence(events) {
+  function signalSummary(events) {
     const signals=new Set(["tracker_rule","popup_without_link","transparent_overlay","identifier_raw","identifier_hash","known_threat","user_rule","ad_click"]);
     return events.slice(0,20).map(e=>({
       signals:(e.signals || []).filter(s=>signals.has(s)).slice(0,8),
@@ -246,6 +246,6 @@
   }
   root.GuardCore={DEFAULTS,AD_CLICK,NAV_RULE,AD_RULE,IDENTITY_RULE,config,publicConfig,domain,host,matches,allowed,blocked,
     site,thirdParty,adClick,navigationSignals,rules,learnedRules,destination,cleanURL,adDestination,
-    shouldBlockPopup,transparentOverlay,unsolicitedPopup,xrayKind,detect,identityTokens,aiEvidence};
+    shouldBlockPopup,transparentOverlay,unsolicitedPopup,xrayKind,detect,identityTokens,signalSummary};
   if(typeof module!=="undefined")module.exports=root.GuardCore;
 })(typeof globalThis!=="undefined"?globalThis:this);

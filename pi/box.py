@@ -155,8 +155,8 @@ def overview():
                  f"connected, {e(wifi['joined'])} joined the portal · <a href='/card'>printable card</a></div>"
                  if wifi["enabled"] else
                  "<div class=card><b>off</b>DataExodus Wi-Fi (sudo bash pi/hotspot.sh)</div>")
-    cards = (f"<div class=cards><div class=card><b class={state_cls(guard.get('ok'))}>{e(guard_text)}</b>Guard service and sandbox"
-             f"{' · AI configured' if guard.get('ai_configured') else ''}</div>" + wifi_card +
+    cards = (f"<div class=cards><div class=card><b class={state_cls(guard.get('ok'))}>{e(guard_text)}</b>"
+             "Guard service and sandbox</div>" + wifi_card +
              f"<div class=card><b>{dns.get('queries', 0):,}</b>DNS lookups in 24 h (last: {e(last)})</div>"
              f"<div class=card><b>{dns_report.pct(dns.get('tracker_queries', 0), dns.get('queries', 0))}</b>lookups to listed tracker / malware names</div>"
              f"<div class=card><b>{e(pi['cpu_temp_c']) if pi['cpu_temp_c'] is not None else 'n/a'} °C</b>{e(pi['host'] or 'this machine')} CPU temperature</div></div>")

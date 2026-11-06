@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # DataExodus Box installer: Raspberry Pi 5 with Raspberry Pi OS 64-bit (Bookworm or newer).
 #
-#   cd ~/DataExodus_Final && sudo bash pi/install.sh [--hotspot] [--study]
+#   cd ~/DataExodus && sudo bash pi/install.sh [--hotspot] [--study]
 #
 # Safe to run again after copying a newer project version: the settings file,
 # the Guard token, reference lists, DNS log and study runs are kept.

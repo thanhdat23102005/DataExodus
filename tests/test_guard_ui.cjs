@@ -6,7 +6,7 @@ test('popup distinguishes evidence and renders advisory output as text, never HT
   const events=[{kind:'identity_match',domain:'collector.example',signals:['identifier_hash'],enforcement:'observed_only',evidence_quality:'local_identifier_match'},
     {kind:'popup',domain:'ads.example',signals:['popup_without_link'],enforcement:'interaction_prevented',evidence_quality:'page_report_unverified'}];
   const dom=new JSDOM(fs.readFileSync(path.join(root,'popup.html'),'utf8'),{runScripts:'outside-only',url:'https://extension-ui.invalid'});
-  dom.window.chrome={runtime:{sendMessage:async m=>({ok:true,data:m.type==='state'?{settings,events,startupError:''}:{source:'gemini',cloud_status:'completed',explanation:'<img src=x onerror=alert(1)>',next_step:'inspect_in_lab'}})}};
+  dom.window.chrome={runtime:{sendMessage:async m=>({ok:true,data:m.type==='state'?{settings,events,startupError:''}:{source:'local',advisory_only:true,explanation:'<img src=x onerror=alert(1)>',next_step:'inspect_in_lab'}})}};
   dom.window.eval(fs.readFileSync(path.join(root,'popup.js'),'utf8'));
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(dom.window.document.getElementById('blocked').textContent,'0');

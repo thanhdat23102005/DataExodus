@@ -26,7 +26,7 @@ Kèm theo có **4 link mẫu** do chính Pi phục vụ, đều là site hư c�
 
 Có ba chế độ:
 
-| Lệnh (trong thư mục `~/DataExodus_Final` trên Pi) | Tác dụng |
+| Lệnh (trong thư mục `~/DataExodus` trên Pi) | Tác dụng |
 | --- | --- |
 | `sudo bash pi/hotspot.sh --prepare` | Cài sẵn mọi thứ. Pi vẫn dùng Wi‑Fi hiện tại. |
 | `sudo bash pi/hotspot.sh --on` | Chế độ demo: Wi‑Fi của Pi thành `DataExodus-Box`, ngay lập tức và sau mỗi lần khởi động. |
@@ -37,7 +37,7 @@ Nếu lệnh làm rớt phiên SSH của bạn (khi bạn đang SSH qua chính W
 Cách làm một lần cho tất cả: chép bản mới nhất sang Pi (`docs/RASPBERRY_PI_VI.md`, mục 3), rồi trên Pi chạy:
 
 ```bash
-cd ~/DataExodus_Final
+cd ~/DataExodus
 sudo bash pi/install.sh --hotspot
 ```
 
@@ -74,7 +74,7 @@ Trên laptop, mở tunnel như mục 5 của `RASPBERRY_PI_VI.md`, rồi vào **
 Laptop cũng có thể vào Wi‑Fi DataExodus và SSH tới `10.42.0.1`:
 
 ```powershell
-cd E:\claude\DataExodus_Final
+cd C:\DataExodus
 powershell -ExecutionPolicy Bypass -File pi\connect-pi.ps1 -PiHost 10.42.0.1 -User student -CopyToken
 ```
 

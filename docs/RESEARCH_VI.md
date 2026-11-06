@@ -45,8 +45,8 @@ export DATAEXODUS_GUARD_TOKEN="$(grep '^DATAEXODUS_GUARD_TOKEN=' /etc/dataexodus
 **Chép kết quả về laptop** (PowerShell trên laptop; thay `<run>` bằng tên thư mục, ví dụ `20261027T1404Z`):
 
 ```powershell
-scp -r admin@192.168.0.83:/var/lib/dataexodus/runs/<run>/report admin@192.168.0.83:/var/lib/dataexodus/runs/<run>/audit E:\claude\DataExodus_Final\reports\pi-study-<run>\
-scp -r admin@192.168.0.83:~/site-scores-* E:\claude\DataExodus_Final\reports\
+scp -r admin@192.168.0.83:/var/lib/dataexodus/runs/<run>/report admin@192.168.0.83:/var/lib/dataexodus/runs/<run>/audit C:\DataExodus\reports\pi-study-<run>\
+scp -r admin@192.168.0.83:~/site-scores-* C:\DataExodus\reports\
 ```
 
 Dữ liệu thô (`raw/`, `study.duckdb`) cứ để trên Pi. Chúng chứa toàn bộ URL đã ghi lại, và báo cáo không cần đến.

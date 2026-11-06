@@ -25,7 +25,7 @@ Pi đã được chuẩn bị sẵn (`--prepare`): mạng Wi‑Fi, cổng web v�
    ```
 2. **Bật chế độ demo.** Gõ trong cửa sổ `admin@Lab`:
    ```bash
-   cd ~/DataExodus_Final && sudo bash pi/hotspot.sh --on
+   cd ~/DataExodus && sudo bash pi/hotspot.sh --on
    ```
    Script báo phiên SSH sắp rớt và đếm 10 giây; điều này là bình thường. Từ lúc này, mỗi lần bật nguồn, Pi đều tự phát `DataExodus-Box`. Nếu muốn, bạn nhắn tôi làm bước này.
 3. **Tập thử ở nhà, làm y hệt các bước ở TAFE bên dưới.** Dùng laptop hoặc một điện thoại thứ hai để vào Wi‑Fi `DataExodus-Box`, không dùng chiếc điện thoại đang chia sẻ mạng.
@@ -44,7 +44,7 @@ Pi đã được chuẩn bị sẵn (`--prepare`): mạng Wi‑Fi, cổng web v�
    4. Thử thêm một link thật, ví dụ `https://www.abc.net.au`. Link thật chạy được nghĩa là Internet qua điện thoại đã thông.
 5. **Phần Guard trên laptop.** Laptop vẫn ở Wi‑Fi `DataExodus-Box`. Mở PowerShell rồi chạy:
    ```powershell
-   cd E:\claude\DataExodus_Final
+   cd C:\DataExodus
    powershell -ExecutionPolicy Bypass -File pi\connect-pi.ps1 -PiHost 10.42.0.1 -User admin -CopyToken
    ```
    Lệnh sẽ hỏi mật khẩu `admin` của Pi. Để cửa sổ này mở trong suốt buổi demo.
@@ -96,7 +96,7 @@ Với bản `hotspot.sh` mới, làm cách khác: `sudo HOTSPOT_BAND=a bash pi/h
 Về nhà, khi Pi đã ở trong vùng phủ Wi‑Fi nhà: cho laptop vào `DataExodus-Box`, chạy `ssh admin@10.42.0.1`, rồi:
 
 ```bash
-cd ~/DataExodus_Final && sudo bash pi/hotspot.sh --home
+cd ~/DataExodus && sudo bash pi/hotspot.sh --home
 ```
 
 Phiên SSH sẽ rớt và Pi quay về Wi‑Fi nhà, địa chỉ lại là `192.168.0.83`. Muốn demo lần nữa thì chạy `--on`.

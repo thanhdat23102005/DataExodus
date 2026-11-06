@@ -242,7 +242,7 @@ async function handle(message,sender){
   });
   if(message.type==="analyze"){
     if(!events.length)throw new Error("No local events to explain yet.");
-    return callAPI("/analyze",{evidence:C.aiEvidence(events),cloud_opt_in:settings.cloudOptIn,language:"vi"});
+    return callAPI("/analyze",{evidence:C.signalSummary(events),language:"vi"});
   }
   if(message.type==="reputation"){
     if(message.lookupOptIn!==true)throw new Error("Confirm the URL lookup first.");

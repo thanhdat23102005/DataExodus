@@ -1,5 +1,40 @@
 # Validation
 
+This file records what was actually tested, on which machine, and what each
+result does not prove. Newest section first; older sections are kept so the
+numbers quoted in earlier write-ups can still be traced.
+
+## Repository trimmed to the product — 6 November 2026
+
+The optional cloud explanation route (Google Gemini) and the experimental
+scikit-learn tracker classifier were removed. Neither was ever run with real
+credentials or real training data, so neither had evidence behind it, and both
+added a dependency and an outbound path the product does not need. Guard's
+"Explain evidence" button now returns the local explanation, which is what the
+tested path always did. Sections below that mention Gemini describe code that
+is no longer in the repository.
+
+| Check | Outcome | Evidence |
+| --- | --- | --- |
+| Full Python suite after the removal | **216 passed** | `python -m pytest tests/ -q` |
+| Full JavaScript suite after the removal | **50 tests, 0 failed** (9 skipped without `jsdom`) | `node --test tests/*.cjs` |
+| `/analyze` makes no outbound call | Asserted, not assumed: the test fails the run if anything POSTs during the request | `tests/test_guard_api.py::test_analyze_explains_locally_and_sends_nothing` |
+| `/health` no longer advertises AI configuration | No `ai_*` key in the response | `tests/test_guard_api.py::test_health_reports_no_ai_configuration` |
+| The remaining outbound call is still capped | Web Risk lookup returns 429 past the per-minute budget | `tests/test_guard_api.py::test_reputation_budget_is_enforced` |
+
+## Reading a report
+
+What a finding supports, and what it does not. These limits belong with the
+numbers, not in a footnote.
+
+- A configured-identifier match supports the presence of that identifier in an observed request. It does not prove the recipient stored it or used it for profiling.
+- A repeated deterministic email hash demonstrates linkability in the captured data. Salted hashes, HMACs and encrypted or unsupported encodings may be missed.
+- Tracker labels use supported domain-wide EasyPrivacy rules and selected Tracker Radar categories. This is not a full ABP engine. Keyword hints do not become confirmed tracker labels.
+- Country is a DNS/GeoIP estimate of an endpoint. Unknown stays unknown. A non-Australian endpoint does not establish an APP 8 breach or a storage location.
+- Fingerprint API calls are recorded at session level; legitimate uses exist. The crawler does not establish fingerprinting intent or attribute the call to a specific network request.
+- Retest comparisons require matching scope, reference/profile fingerprints, identity profile, capture protocol and successful captures. A changed or failed capture makes disappearance inconclusive.
+- Exported reports omit raw request paths, query values, bodies, cookies, identifiers and matched digests. They still contain domains and site history. Raw JSON and DuckDB retain sensitive details and stay local.
+
 ## Guard 0.5.1 (pop-unders closed by the browser) — 28 October 2026
 
 Same machine and versions as below.
@@ -33,7 +68,7 @@ Found by the real-browser runs and fixed in this release: the portal's `Referrer
 
 **Research run 1 on the Pi (28 October 2026):** the 50-site study completed (50 sessions, 8.5 minutes, resolver 1.1.1.1 recorded): 34 full captures, 2 partial, 14 failed, mostly bot-protection responses, which were not bypassed. The link checker on the same 50 legitimate sites rated none Dangerous (28 low, 21 careful; 31/18 after the scam-wording refinement found by this run). Details: `docs/evidence/research-run1/README.md`.
 
-**Not verified yet:** the Wi-Fi access point, NetworkManager's DHCP and the portal on 10.42.0.1 (the Pi had no Ethernet uplink yet), and captive-portal pop-ups on real iPhone and Android phones (`docs/HOTSPOT_VI.md` section 3 lists the checks to run). No precision/recall of the score on a labelled set of real phishing links; live Gemini and Web Risk calls.
+**Not verified yet:** the Wi-Fi access point, NetworkManager's DHCP and the portal on 10.42.0.1 (the Pi had no Ethernet uplink yet), and captive-portal pop-ups on real iPhone and Android phones (`docs/HOTSPOT_VI.md` section 3 lists the checks to run). No precision/recall of the score on a labelled set of real phishing links; live Web Risk calls.
 
 ## DataExodus Final (Guard 0.4 + Raspberry Pi box) — 23 October 2026
 
@@ -52,7 +87,7 @@ Windows 11, Python 3.11.4, Node.js 24, Playwright Chromium 153.0.8010.12.
 
 Found by the real-browser run and fixed: Chrome refuses a case-insensitive SHA-512 `regexFilter` (2 KB compiled-regex limit), which made saving a protected email fail in the earlier Guard 0.3 code. Identity rules now use `urlFilter`.
 
-**Not verified here:** `pi/install.sh` and the systemd services on physical Raspberry Pi hardware (Raspberry Pi OS, nftables, Chromium's sandbox under systemd); live Gemini and Web Risk calls; any real-world blocking rate, false-positive rate on public sites or user study. The browser runs use a loopback lab; they show the mechanism works, not how often it helps on the open web.
+**Not verified here:** `pi/install.sh` and the systemd services on physical Raspberry Pi hardware (Raspberry Pi OS, nftables, Chromium's sandbox under systemd); live Web Risk calls; any real-world blocking rate, false-positive rate on public sites or user study. The browser runs use a loopback lab; they show the mechanism works, not how often it helps on the open web.
 ## Earlier snapshots — 22 October 2026
 
 ## Guard 0.3 continuation — 23 October 2026
@@ -72,16 +107,16 @@ Validation was run against the actual extracted/uploaded code and the updated fi
 | --- | --- | --- |
 | Current full Python suite | 91 passed; one pre-existing Starlette/httpx warning | `docs/evidence/guard-pytest.txt` |
 | Current full JavaScript suite | 18 passed, zero skips; includes jsdom UI tests | `docs/evidence/guard-javascript-tests.txt` |
-| New Guard policy and worker behaviour | DNR install/pause/exception rules; caller restrictions; secret-free MAIN policy and AI projection; observation separated from rule matches | `tests/test_guard_core.cjs`, `test_guard_worker.cjs`, `test_guard_page.cjs` |
-| API security / Gemini adapter | Authentication, body limits, closed input schema, explicit opt-in, provider request construction, invalid-output fallback and hard call caps | `tests/test_guard_api.py`; provider calls mocked |
+| New Guard policy and worker behaviour | DNR install/pause/exception rules; caller restrictions; secret-free MAIN policy and evidence projection; observation separated from rule matches | `tests/test_guard_core.cjs`, `test_guard_worker.cjs`, `test_guard_page.cjs` |
+| API security | Authentication, body limits, closed input schema, explicit opt-in, provider request construction, invalid-output fallback and hard call caps | `tests/test_guard_api.py`; provider calls mocked |
 | Actual loopback API process | Authenticated health/local explanation returned; unauthenticated health returned 401 | `docs/evidence/guard-smoke.json`; zero cloud calls |
 | New receiver lab | Actual HTTP service accepts only synthetic raw/hash identity and counts collector/ad arrivals; document control serves | `tests/test_guard_lab.py` |
 | Guard report and shared rules | Validated evidence, separate observation labels, source digest and supported-domain export | `tests/test_guard_report.py`, `test_guard_rules.py` |
 | UI behaviour | Advisory output rendered as text; reputation requires separate URL-disclosure opt-in | `tests/test_guard_ui.cjs` |
 | Browser acceptance | **Not completed**: download returned an invalid/truncated ZIP; Chromium executable absent | `examples.run_guard_acceptance` is supplied for local execution |
-| Gemini / Web Risk with actual keys | **Not performed**: credentials unavailable; adapters tested with mock responses | No live accuracy, billing or latency claim |
+| Web Risk with an actual key | **Not performed**: no credential; the adapter was tested with mock responses | No live accuracy, billing or latency claim |
 
-These checks do not establish real-world blocking rates, production readiness, comprehensive malware protection or commercial demand. Gemini currently cannot change enforcement, so its incremental contribution must be evaluated on explanation quality and user comprehension. Network enforcement and page-reported interventions have different evidence strength.
+These checks do not establish real-world blocking rates, production readiness, comprehensive malware protection or commercial demand. Network enforcement and page-reported interventions have different evidence strength.
 
 The following table and fixture observations retain the preceding audit-only validation for provenance; its 71/5 suite counts are superseded above.
 

@@ -32,77 +32,6 @@ DB_PATH = Path("data/live.duckdb")
 ROOT_DIR = Path(__file__).parent.parent
 
 
-def _load_env_file(path: Path) -> dict[str, str]:
-    if not path.exists():
-        return {}
-    env: dict[str, str] = {}
-    for line in path.read_text().splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, _, value = line.partition("=")
-        env[key.strip()] = value.strip()
-    return env
-
-
-def _risk_level(score: int) -> str:
-    return level(score)
-
-
-_influx_env = _load_env_file(ROOT_DIR / "monitoring" / "influxdb" / "credentials.env")
-_influx_write_api = None
-if _influx_env.get("INFLUX_TOKEN"):
-    from influxdb_client import InfluxDBClient
-    from influxdb_client.client.write_api import SYNCHRONOUS
-
-    _influx_client = InfluxDBClient(
-        url=_influx_env.get("INFLUX_URL", "http://127.0.0.1:8086"),
-        token=_influx_env["INFLUX_TOKEN"],
-        org=_influx_env.get("INFLUX_ORG", "dataexodus"),
-    )
-    _influx_write_api = _influx_client.write_api(write_options=SYNCHRONOUS)
-    _influx_bucket = _influx_env.get("INFLUX_BUCKET", "live_requests")
-else:
-    print(
-        "[agent] warning: no InfluxDB credentials at "
-        "monitoring/influxdb/credentials.env - Grafana dashboard will stay "
-        "empty. Run monitoring/setup_monitoring.sh."
-    )
-
-
-def write_influx_point(event: dict) -> None:
-    if _influx_write_api is None:
-        return
-    from influxdb_client import Point
-
-    initiator_host = ""
-    if event.get("initiator"):
-        from urllib.parse import urlparse
-        initiator_host = urlparse(event["initiator"]).hostname or ""
-
-    offshore = event.get("offshore") is True
-    risk_score = event.get("risk_score") or 0
-
-    point = (
-        Point("requests")
-        .tag("page_domain", initiator_host or "unknown")
-        .tag("domain", event.get("domain") or "unknown")
-        .tag("owner", event.get("owner") or "none")
-        .tag("country", event.get("country") or "unknown")
-        .tag("category", event.get("category") or "none")
-        .tag("resource_type", event.get("resource_type") or "other")
-        .tag("risk_level", _risk_level(risk_score))
-        .field("risk_score", risk_score)
-        .field("is_tracker", int(bool(event.get("is_tracker"))))
-        .field("pii_findings", int(bool(event.get("pii_detected"))))
-        .field("offshore", int(offshore))
-        .field("fingerprinting", int(bool(event.get("fingerprinting"))))
-    )
-    try:
-        _influx_write_api.write(bucket=_influx_bucket, record=point)
-    except Exception as exc:  # InfluxDB down/unreachable shouldn't break ingestion
-        print(f"[agent] warning: InfluxDB write failed: {exc}")
-
 class RequestEvent(BaseModel):
     url: str = Field(min_length=1, max_length=32768)
     initiator: str | None = None
@@ -334,8 +263,6 @@ async def worker():
                     conn.executemany("INSERT INTO live_requests (" + ",".join(columns) + ") VALUES ("
                                      + ",".join("?" for _ in columns) + ")",
                                      [[event.get(col) for col in columns] for event in enriched])
-                for event in enriched:
-                    write_influx_point(event)
                 dead = set()
                 message = json.dumps({"events": enriched, "alerts": []})
                 for client in clients:

@@ -70,7 +70,7 @@ test('only network debug matches count as Chrome evidence; local identity observ
   assert.equal('apiToken' in policy,false);assert.equal('testEmail' in policy,false);
   await s.message({type:'analyze'});
   const sent=s.calls[0].payload;
-  assert.equal(sent.cloud_opt_in,false);
+  assert.equal('cloud_opt_in' in sent,false);
   assert.ok(!JSON.stringify(sent).includes('collector.example'));
   assert.ok(!JSON.stringify(sent).includes('student.demo'));
 });

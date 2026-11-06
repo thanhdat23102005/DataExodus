@@ -3,7 +3,7 @@ let current,listedDomain="";
 async function send(type,extra={}){const r=await chrome.runtime.sendMessage({type,...extra});if(!r.ok)throw new Error(r.error);return r.data;}
 async function load(){
   current=(await send("state")).settings;
-  for(const key of ["enabled","popupGuard","labMode","cloudOptIn","preventCollection","learnCollection","quarantineAds"])$(key).checked=current[key];
+  for(const key of ["enabled","popupGuard","labMode","preventCollection","learnCollection","quarantineAds"])$(key).checked=current[key];
   for(const key of ["testEmail","apiToken"])$(key).value=current[key];
   for(const key of ["blockedDomains","allowSites"])$(key).value=current[key].join("\n");
 }
@@ -12,7 +12,7 @@ $("form").onsubmit=async e=>{
   $("status").textContent="Applying rules…";
   try{
     const next={...current};
-    for(const key of ["enabled","popupGuard","labMode","cloudOptIn","preventCollection","learnCollection","quarantineAds"])next[key]=$(key).checked;
+    for(const key of ["enabled","popupGuard","labMode","preventCollection","learnCollection","quarantineAds"])next[key]=$(key).checked;
     for(const key of ["testEmail","apiToken"])next[key]=$(key).value.trim();
     for(const key of ["blockedDomains","allowSites"]){
       next[key]=$(key).value.split(/\s+/).filter(Boolean);

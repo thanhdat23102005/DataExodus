@@ -1,0 +1,13 @@
+# Line endings are not cosmetic in this project.
+#
+# pi/install.sh, pi/hotspot.sh and the systemd units in pi/systemd/ are run on
+# the Raspberry Pi. A carriage return at the end of a shebang or a unit
+# directive is a syntax error there, and tests/test_pi_files.py checks for one.
+# Git on Windows defaults to core.autocrlf=true, so without this file anyone who
+# clones the repository on Windows gets CRLF in those scripts and a broken
+# installer. Normalising in .gitattributes fixes it for every clone, instead of
+# asking each person to change their Git config.
+* text=auto eol=lf
+
+# Images: never touched, never diffed as text.
+*.png binary

@@ -18,7 +18,7 @@ Dịch vụ web quản trị trên Pi **chỉ nghe ở 127.0.0.1**. Laptop kết
 
 - Raspberry Pi 5 (4 GB là đủ, 8 GB thoải mái hơn), thẻ microSD 32 GB trở lên (SSD NVMe thì càng tốt), nguồn chính hãng 27 W, nên dùng dây mạng.
 - Trên laptop Windows: [Raspberry Pi Imager](https://www.raspberrypi.com/software/) và OpenSSH Client (Windows 11 có sẵn; nếu thiếu thì vào Settings → System → Optional features).
-- Thư mục dự án `E:\claude\DataExodus_Final`.
+- Thư mục dự án trên laptop. Các lệnh dưới đây viết là `C:\DataExodus`; nếu bạn clone vào chỗ khác thì thay đường dẫn cho đúng.
 
 **Tạo SSH key trên laptop** (khuyên dùng thay cho mật khẩu). Chạy trong PowerShell:
 
@@ -54,14 +54,14 @@ sudo apt update && sudo apt full-upgrade -y
 
 ## 3. Chép dự án sang Pi
 
-Cách gọn nhất là chép file zip, vì thư mục trên laptop có thể đã chứa `.venv` của Windows (nặng và vô dụng trên Pi). Chạy các lệnh dưới đây trong **PowerShell trên laptop** (dấu nhắc `PS C:\...>`), **không** chạy trong cửa sổ SSH của Pi (dấu nhắc `user@host:~ $`): đường dẫn `E:\...` chỉ có trên laptop. Thay `student@dataexodus.local` bằng tên đăng nhập và tên máy (hoặc IP) Pi của bạn, ví dụ `admin@Lab.local` hoặc `admin@192.168.0.83`; trên Pi, lệnh `hostname -I` in ra IP.
+Cách gọn nhất là chép file zip, vì thư mục trên laptop có thể đã chứa `.venv` của Windows (nặng và vô dụng trên Pi). Chạy các lệnh dưới đây trong **PowerShell trên laptop** (dấu nhắc `PS C:\...>`), **không** chạy trong cửa sổ SSH của Pi (dấu nhắc `user@host:~ $`): đường dẫn `C:\...` chỉ có trên laptop. Thay `student@dataexodus.local` bằng tên đăng nhập và tên máy (hoặc IP) Pi của bạn, ví dụ `admin@Lab.local` hoặc `admin@192.168.0.83`; trên Pi, lệnh `hostname -I` in ra IP.
 
 ```powershell
-scp E:\claude\DataExodus_Final.zip student@dataexodus.local:~/
-ssh student@dataexodus.local "python3 -m zipfile -e DataExodus_Final.zip ."
+scp C:\DataExodus.zip student@dataexodus.local:~/
+ssh student@dataexodus.local "python3 -m zipfile -e DataExodus.zip ."
 # Dùng lại danh sách tham chiếu và file GeoLite2 đã tải trên laptop
 # (không phải tải lại 100 MB, không cần nhập key MaxMind trên Pi):
-scp -r E:\claude\DataExodus\data\blocklists student@dataexodus.local:~/DataExodus_Final/data/
+scp -r C:\DataExodus\data\blocklists student@dataexodus.local:~/DataExodus/data/
 ```
 
 (Nếu file zip được lưu ở chỗ khác, ví dụ thư mục Downloads, hãy sửa lại đường dẫn trong lệnh `scp` đầu tiên.)
@@ -73,7 +73,7 @@ Không chép `data/identities.local.yaml` có thông tin thật của bạn. N�
 Trên Pi:
 
 ```bash
-cd ~/DataExodus_Final
+cd ~/DataExodus
 sudo bash pi/install.sh              # thêm --hotspot để bật luôn Wi-Fi cho khách, --study cho phần nghiên cứu
 ```
 
@@ -103,7 +103,7 @@ Sau đó **đăng xuất rồi SSH vào lại một lần**, để tài khoản 
 Trên laptop, trong thư mục dự án:
 
 ```powershell
-cd E:\claude\DataExodus_Final
+cd C:\DataExodus
 powershell -ExecutionPolicy Bypass -File pi\connect-pi.ps1 -PiHost dataexodus.local -User student -CopyToken
 ```
 
